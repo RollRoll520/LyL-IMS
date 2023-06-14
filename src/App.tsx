@@ -1,6 +1,6 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import TestReactSpring from "./pages/testReactSpring/testReactSpring";
+import TestReactSpring from "./pages/testReactSpring";
 
 function App() {
   return (
