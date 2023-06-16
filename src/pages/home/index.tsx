@@ -1,9 +1,17 @@
-import * as React from "react";
+import Banner from "./banner";
+import Content from "./content";
+import Footer from "./footer";
 
-const Home = () => {
-    return {
 
-    }
-}
+const Home =() => {
+
+  return (
+    <>
+    <Banner/>
+    <Content/>
+    <Footer/>
+    </>
+  )
+};
 
 export default Home;
