@@ -1,18 +1,13 @@
-const cssFooter:React.CSSProperties= {
-    backgroundColor: "grey",
-    height: "80px",
-    overflow: "hidden",
-    padding: "0 24px",
-    lineHeight: "80px",
-    textAlign: "center",
-    color: "black",
-    position: "relative"
-};
+import "./css/footer.css"
 
 const Footer = () => {
     return (
-        <div style={cssFooter}></div>
-    )
+      <div className="Footer">
+        <p className="member">
+          <span style={{ color: "#abc4ff" }}>作者：</span>李国能、刘功华、易梓轩
+        </p>
+      </div>
+    );
 };
 
 export default Footer;

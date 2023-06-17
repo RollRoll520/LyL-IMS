@@ -1,0 +1,18 @@
+.Footer {
+  background-color: #172d66;
+  height: 80px;
+  overflow: hidden;
+  padding: 0;
+  line-height: 80px;
+  text-align: center;
+  color: #ffcbf2;
+  position: relative;
+}
+
+.member {
+  margin: 0;
+  height: 100%;
+  line-height: 80px;
+  text-align: center;
+  color: #c1d3fe;
+}
