@@ -3,6 +3,7 @@ import "./css/banner.css";
 import MyIcon from "../../components/iconfont";
 import { DownOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Banner = () => {
   const [showContent, setShowContent] = useState(false);
@@ -43,6 +44,7 @@ const Banner = () => {
           <span style={{ color: "white" }}>测试</span>一站式解决方案
         </p>
         <Col>
+        <Link to="/OnlineTest">
           <Button
             className="link1 link-container"
             type="primary"
@@ -56,7 +58,9 @@ const Banner = () => {
           >
             在线训练
             <MyIcon type="icon-moxingxunlian" />
-          </Button>
+          </Button></Link>
+        <Link to="/OnlineExercise">
+
           <Button
             className="link2 link-container"
             type="primary"
@@ -72,6 +76,7 @@ const Banner = () => {
             在线测试
             <MyIcon type="icon-pingtaishujuceshi" />
           </Button>
+          </Link>
         </Col>
       </div>
       <div className="downIcon" onClick={() => setShowContent(true)}>
