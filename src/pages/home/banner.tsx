@@ -7,26 +7,44 @@ import { Link } from "react-router-dom";
 
 const Banner = () => {
   const [showContent, setShowContent] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const handleWheel = () => {
+      if (isAnimating) {
+        setIsAnimating(false);
+        setShowContent(false);
+      }
+    };
+    window.addEventListener("wheel", handleWheel);
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+    };
+  }, [isAnimating]);
 
   useEffect(() => {
     if (showContent) {
+      if (isAnimating) return;
+
+      setIsAnimating(true);
       const targetY = window.scrollY + window.innerHeight;
       let currentY = window.scrollY;
 
       const animateScroll = () => {
-        currentY += (targetY - currentY) * 0.1;
+        currentY += (targetY - currentY) * 0.3;
         window.scrollTo(0, currentY);
 
         if (Math.abs(currentY - targetY) > 1) {
           window.requestAnimationFrame(animateScroll);
         } else {
+          setIsAnimating(false);
           setShowContent(false);
         }
       };
 
       window.requestAnimationFrame(animateScroll);
     }
-  }, [showContent]);
+  }, [showContent, isAnimating]);
 
   return (
     <div className="Banner">
@@ -44,38 +62,38 @@ const Banner = () => {
           <span style={{ color: "white" }}>测试</span>一站式解决方案
         </p>
         <Col>
-        <Link to="/OnlineTest">
-          <Button
-            className="link1 link-container"
-            type="primary"
-            style={{
-              borderColor: "#9ea6fc",
-              backgroundColor: "#9ea6fc",
-              marginRight: "10px",
-              fontWeight: "550",
-            }}
-            data-tooltip="点击进行在线训练"
-          >
-            在线训练
-            <MyIcon type="icon-moxingxunlian" />
-          </Button></Link>
-        <Link to="/OnlineExercise">
-
-          <Button
-            className="link2 link-container"
-            type="primary"
-            style={{
-              borderColor: "white",
-              backgroundColor: "white",
-              color: "#9ea6fc",
-              marginLeft: "10px",
-              fontWeight: "550",
-            }}
-            data-tooltip="点击进行在线测试"
-          >
-            在线测试
-            <MyIcon type="icon-pingtaishujuceshi" />
-          </Button>
+          <Link to="/OnlineExercise">
+            <Button
+              className="link1 link-container"
+              type="primary"
+              style={{
+                borderColor: "#9ea6fc",
+                backgroundColor: "#9ea6fc",
+                marginRight: "10px",
+                fontWeight: "550",
+              }}
+              data-tooltip="点击进行在线训练"
+            >
+              在线训练
+              <MyIcon type="icon-moxingxunlian" />
+            </Button>
+          </Link>
+          <Link to="/OnlineTest">
+            <Button
+              className="link2 link-container"
+              type="primary"
+              style={{
+                borderColor: "white",
+                backgroundColor: "white",
+                color: "#9ea6fc",
+                marginLeft: "10px",
+                fontWeight: "550",
+              }}
+              data-tooltip="点击进行在线测试"
+            >
+              在线测试
+              <MyIcon type="icon-pingtaishujuceshi" />
+            </Button>
           </Link>
         </Col>
       </div>
