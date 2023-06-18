@@ -9,9 +9,9 @@
   background-position: center;
   background: linear-gradient(-45deg, #efd6ff,#e7c6ff, #d1dbf9, #b6ccfe, #c0fdff);
   background-size: 400% 400%;
-  -webkit-animation: Gradient 10s ease infinite;
-  -moz-animation: Gradient 10s ease infinite;
-  animation: Gradient 10s ease infinite;
+  -webkit-animation: Gradient 8s ease infinite;
+  -moz-animation: Gradient 8s ease infinite;
+  animation: Gradient 8s ease infinite;
 }
 
 @-webkit-keyframes Gradient {
@@ -54,7 +54,16 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -20%);
+  opacity: 0; /* 初始时元素透明度为0 */
+  animation: showDesc 1s ease-out forwards 0.3s; /* 添加动画效果 */
+}
+
+@keyframes showDesc {
+  to {
+    opacity: 1; /* 元素透明度变为1，显示元素 */
+    transform: translate(-50%,-50%); /* 元素向上平移回到原位置 */
+  }
 }
 
 .Title1 {
