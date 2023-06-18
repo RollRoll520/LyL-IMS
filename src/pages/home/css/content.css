@@ -18,13 +18,13 @@
   margin-bottom: 45px;
 }
 
-/* .desc {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: all 0.5s ease;
+.desc {
+  opacity: 0; /* 初始时元素透明度为0 */
+  transform: translateY(20px); /* 初始时将元素向下平移20px */
+  transition: opacity 3s ease-out, transform 3s ease-out; /* 添加过渡效果 */
 }
 
-.desc-enter-done {
-  opacity: 1;
-  transform: translateY(0px);
-} */
+.desc.show {
+  opacity: 1; /* 元素透明度变为1，显示元素 */
+  transform: translateY(0); /* 元素向上平移回到原位置 */
+}

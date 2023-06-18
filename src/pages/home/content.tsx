@@ -1,8 +1,30 @@
 import { Card, Col, Row } from "antd";
 import "./css/content.css";
 import MyLottie from "../../components/lottie";
+import { useEffect, useState } from "react";
 
 const Content = () => {
+  const [showDesc, setShowDesc] = useState(false);
+
+  useEffect(() => {
+    const descEle = document.querySelector(".desc");
+    if(descEle == null) return ;
+    const descTop = descEle.getBoundingClientRect().top;
+
+    const onScroll = () => {
+      if (window.scrollY + window.innerHeight >= descTop) {
+        setShowDesc(true);
+        window.removeEventListener("scroll", onScroll);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   return (
     <div className="Content">
       <h1 className="title">
@@ -10,7 +32,7 @@ const Content = () => {
       </h1>
       <div style={{ width: "80%", margin: "0 auto" }}>
         <Row
-          className="desc"
+          className={`desc ${showDesc ? "show" : ""}`}
           justify="center"
           gutter={20}
           style={{ height: "50%" }}
@@ -53,7 +75,7 @@ const Content = () => {
                     alignItems: "center",
                   }}
                 >
-                  <MyLottie type={"react-dark"}  />
+                  <MyLottie type={"react-dark"} />
                 </div>
               }
               bordered={false}
