@@ -7,44 +7,33 @@ import { Link } from "react-router-dom";
 
 const Banner = () => {
   const [showContent, setShowContent] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
 
-  useEffect(() => {
-    const handleWheel = () => {
-      if (isAnimating) {
-        setIsAnimating(false);
-        setShowContent(false);
-      }
-    };
-    window.addEventListener("wheel", handleWheel);
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-    };
-  }, [isAnimating]);
+  function preventDefault(event: WheelEvent) {
+    event.preventDefault();
+  }
 
   useEffect(() => {
     if (showContent) {
-      if (isAnimating) return;
+      window.addEventListener("wheel", preventDefault, { passive: false });
 
-      setIsAnimating(true);
       const targetY = window.scrollY + window.innerHeight;
       let currentY = window.scrollY;
 
       const animateScroll = () => {
-        currentY += (targetY - currentY) * 0.3;
+        currentY += (targetY - currentY) * 0.1;
         window.scrollTo(0, currentY);
 
         if (Math.abs(currentY - targetY) > 1) {
           window.requestAnimationFrame(animateScroll);
         } else {
-          setIsAnimating(false);
           setShowContent(false);
+          window.removeEventListener("wheel", preventDefault);
         }
       };
 
       window.requestAnimationFrame(animateScroll);
     }
-  }, [showContent, isAnimating]);
+  }, [showContent]);
 
   return (
     <div className="Banner">
