@@ -116,16 +116,17 @@
 
 .downIcon {
   cursor: pointer;
-  bottom: 20px;
+  bottom: 30px;
   font-size: 24px;
   position: absolute;
   left: 50%;
   margin-left: -12px;
   color: white;
   animation-name: myAnimation;
-  animation-duration: 1s;
+  animation-duration: 1.2s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+  animation-delay: 0.5s;
 }
 
 .downIcon::after {
@@ -153,7 +154,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-30px);
   }
   100% {
     transform: translateY(0);

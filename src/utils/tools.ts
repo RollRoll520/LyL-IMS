@@ -1,4 +1,4 @@
-import logo from '../assets/tooth.jpg';
+import logo from "../assets/logoOfLyL.svg";
 
 export const defaultImg = logo;
 
@@ -10,7 +10,10 @@ export const defaultImg = logo;
 export const serverUrl = "https://roll0814.cn:8000/";
 // export const serverUrl = "/api";
 
-
+/**
+ * lottie文件传输地址
+ */
+export const lottieUrl = "https://roll0814.cn/ftp-lottie/lyl/";
 
 /**
  * 文件上传接口

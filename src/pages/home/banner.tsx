@@ -1,7 +1,6 @@
 import { Button, Col } from "antd";
 import "./css/banner.css";
 import MyIcon from "../../components/iconfont";
-import { DownOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -87,7 +86,9 @@ const Banner = () => {
         </Col>
       </div>
       <div className="downIcon" onClick={() => setShowContent(true)}>
-        <DownOutlined />
+        {/* <DownOutlined /> */}
+        {/* <DownCircleOutlined /> */}
+        <MyIcon type="icon-xiala" />
       </div>
       {showContent && <div style={{ height: "100vh" }} />}
     </div>
