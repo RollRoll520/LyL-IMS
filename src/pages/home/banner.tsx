@@ -46,7 +46,7 @@ const Banner = () => {
         <p className="Des">
           基于<span style={{ color: "white" }}>机器学习</span>
           的分布式系统故障诊断模型在线
-          <span style={{ color: "white" }}>训练</span>、在线
+          <span style={{ color: "white" }}>训练、</span>在线
           <span style={{ color: "white" }}>测试</span>一站式解决方案
         </p>
         <Col>
