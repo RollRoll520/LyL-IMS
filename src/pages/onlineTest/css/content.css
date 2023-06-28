@@ -1,4 +1,4 @@
-.Content1 {
+.Content2 {
   width: 100%;
   min-height: 100%;
   position: relative;
@@ -19,21 +19,21 @@
 
 
 
-.Content1 .LottieWrapper {
+.Content2 .LottieWrapper {
   z-index: -1;
   margin-right: auto;
+  margin-left: 0;
   position: absolute;
   bottom: 0;
-  right: 0;
-  width: 400px;
+  left: 0;
+  width: 280px;
 }
-
-.Content1 .StepWrapper {
+.Content2 .StepWrapper {
   z-index: 99;
-  margin-left: 20px;
+  margin-right: 20px;
   position: absolute;
   bottom: 10px;
-  left: 0;
+  right: 0;
 }
 
 @media (max-width: 768px) {

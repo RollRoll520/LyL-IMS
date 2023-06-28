@@ -12,32 +12,32 @@ import {
 } from "@ant-design/icons";
 import { useState } from "react";
 import MyIcon from "../../components/iconfont";
-import ExitModal from "./exitModal";
 import { useNavigate } from "react-router-dom";
+import ExitModal from "../onlineExercise/exitModal";
 
 const exciseAccess = [
   {
     hasArrow: true,
     type: "uploading-to-cloud",
-    title: "上传训练集",
+    title: "上传测试集",
     desc: "上传训练集数据至云端",
   },
   {
     hasArrow: true,
-    type: "headLoading",
-    title: "在线训练",
+    type: "ai-animation",
+    title: "在线测试",
     desc: "云端在线对模型进行训练",
   },
   {
     hasArrow: true,
     type: "real-time-data",
-    title: "训练结果可视化",
+    title: "测试结果可视化",
     desc: "将训练结果可视化展示",
   },
   {
     hasArrow: false,
-    type: "settings-updated",
-    title: "下载训练模型",
+    type: "download from cloud",
+    title: "下载测试结果",
     desc: "从云端下载训练完成后地模型",
   },
 ];
@@ -45,36 +45,38 @@ const exciseAccess = [
 const Content = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-    const [modalOpen, setModalOpen] = useState(false);
-    const [exitOpt,setExitOpt] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [exitOpt, setExitOpt] = useState(0);
 
-   const onCancelAction = () => {//确认退出
-    if (exitOpt === 1) navigate("/");
-    else navigate("/onlineTest");
+  const onCancelAction = () => {
+    //确认退出
+    if (exitOpt === 0) navigate("/");
+    else navigate("/onlineExercise");
     setModalOpen(false);
-   };
-   const onOkAction = () => {//取消退出
-     setModalOpen(false);
-   };
+  };
+  const onOkAction = () => {
+    //取消退出
+    setModalOpen(false);
+  };
 
   return (
-    <div className="Content1">
+    <div className="Content2">
       <FloatButton
         style={{ left: 20, top: 10, zIndex: 999 }}
         icon={<HomeOutlined style={{ color: "#9da5fb" }} />}
         tooltip={<div placeholder="bottom">返回LyL主页</div>}
         onClick={() => {
           setModalOpen(true);
-          setExitOpt(1);
+          setExitOpt(0);
         }}
       />
       <FloatButton
         style={{ left: 70, top: 10, zIndex: 999 }}
-        icon={<MyIcon type="icon-pingtaishujuceshi" />}
-        tooltip={<div placeholder="bottom">前往在线测试</div>}
+        icon={<MyIcon type="icon-moxingxunlian-copy" />}
+        tooltip={<div placeholder="bottom">前往在线训练</div>}
         onClick={() => {
           setModalOpen(true);
-          setExitOpt(0);
+          setExitOpt(1);
         }}
       />
       <ExitModal
@@ -93,7 +95,7 @@ const Content = () => {
             fontSize: "15px",
           }}
         >
-          欢迎使用LyL分布式系统故障诊断系统在线训练功能
+          欢迎使用LyL分布式系统故障诊断系统在线测试功能
         </p>
         <p
           style={{
@@ -104,7 +106,7 @@ const Content = () => {
             fontSize: "15px",
           }}
         >
-          该功能基于带有故障标签的样本进行指标分析，训练故障分类模型，提高故障诊断的准确性和效率
+          你可以上传单条或批量测试样本进行测试
         </p>
         <p
           style={{
@@ -115,7 +117,7 @@ const Content = () => {
             fontSize: "15px",
           }}
         >
-          你可以上传训练数据并在线训练，训练完成后可下载训练好的模型
+          该功能可视化分类结果，你可以直观地了解并下载测试样本的分类情况
         </p>
       </div>
       <div
@@ -200,13 +202,14 @@ const Content = () => {
         />
         <div className="StepWrapper">
           <Steps
+            labelPlacement="vertical"
             direction="vertical"
             size="small"
             current={currentStep}
             status="process"
             items={[
               {
-                title: "上传训练集",
+                title: "上传测试集",
                 icon: (
                   <>
                     {currentStep === 0 ? (
@@ -218,7 +221,7 @@ const Content = () => {
                 ),
               },
               {
-                title: "在线训练",
+                title: "在线测试",
                 icon: (
                   <>
                     {currentStep <= 1 ? (
@@ -242,7 +245,7 @@ const Content = () => {
                 ),
               },
               {
-                title: "下载模型",
+                title: "下载结果",
                 disabled: true,
                 icon: (
                   <>
@@ -258,7 +261,7 @@ const Content = () => {
           />
         </div>
         <div className="LottieWrapper">
-          <MyLottie type="people-brainstorming-and-get-feedback" />
+          <MyLottie type="working-on-computer-desk-illustration" />
         </div>
       </div>
     </div>
