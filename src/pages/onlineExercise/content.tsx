@@ -26,7 +26,7 @@ const exciseAccess = [
     hasArrow: true,
     type: "headLoading",
     title: "在线训练",
-    desc: "云端在线对模型进行训练",
+    desc: "云端对模型进行在线训练",
   },
   {
     hasArrow: true,

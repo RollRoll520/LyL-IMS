@@ -9,7 +9,7 @@ const Header = () => {
     <div className="Header">
       <Head
         style={{
-          backgroundColor: "#182e67",
+          backgroundColor: "#7977ac",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -17,6 +17,7 @@ const Header = () => {
           position: "fixed",
           width: "100%",
           zIndex: "999",
+          // borderBottom: "2px solid #dedcf7",
         }}
       >
         <img
@@ -28,10 +29,10 @@ const Header = () => {
           onClick={() => navigate("/")}
         />
         <p className="Title1" style={{ fontSize: "20px", lineHeight: "100%" }}>
-          <span style={{ color: "#d1dbf9" }}>LyL</span>
-          <span style={{ color: "#bbb6f1" }}>分布式系统</span>
-          <span style={{ color: "#d1dbf9" }}>故障诊断</span>
-          <span style={{ color: "#bbb6f1" }}>系统</span>
+          <span style={{ color: "white" }}>LyL</span>
+          <span style={{ color: "#bbafe8" }}>分布式系统</span>
+          <span style={{ color: "white" }}>故障诊断</span>
+          <span style={{ color: "#bbafe8" }}>系统</span>
         </p>
       </Head>
     </div>

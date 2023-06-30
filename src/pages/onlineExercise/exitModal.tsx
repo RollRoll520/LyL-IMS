@@ -18,6 +18,7 @@ const ExitModal: React.FC<ExitModalProps> = ({ isOpen, onCancel, onOk }) => {
       cancelText="确认退出"
       okText="返回当前页面"
       cancelButtonProps={{ danger: true }}
+      closable={false}
     >
       <p>退出该页面将导致你目前的进度丢失，是否确认退出？</p>
     </Modal>

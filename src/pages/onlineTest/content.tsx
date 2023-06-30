@@ -4,7 +4,6 @@ import "./css/content.css";
 import {
   RightCircleFilled,
   CloudUploadOutlined,
-  CheckCircleFilled,
   CloudDownloadOutlined,
   CloudSyncOutlined,
   FundViewOutlined,
@@ -20,31 +19,31 @@ const exciseAccess = [
     hasArrow: true,
     type: "uploading-to-cloud",
     title: "上传测试集",
-    desc: "上传训练集数据至云端",
+    desc: "上传测试集数据至云端",
   },
   {
     hasArrow: true,
     type: "ai-animation",
     title: "在线测试",
-    desc: "云端在线对模型进行训练",
+    desc: "云端对模型进行在线测试",
   },
   {
     hasArrow: true,
     type: "real-time-data",
     title: "测试结果可视化",
-    desc: "将训练结果可视化展示",
+    desc: "将在线测试结果可视化展示",
   },
   {
     hasArrow: false,
-    type: "download from cloud",
+    type: "light-download-from-cloud",
     title: "下载测试结果",
-    desc: "从云端下载训练完成后地模型",
+    desc: "从云端下载测试结果",
   },
 ];
 
 const Content = () => {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(2);
   const [modalOpen, setModalOpen] = useState(false);
   const [exitOpt, setExitOpt] = useState(0);
 
@@ -90,7 +89,7 @@ const Content = () => {
           style={{
             width: "70%",
             margin: "0 auto",
-            color: "#84868c",
+            color: "white",
             textAlign: "center",
             fontSize: "15px",
           }}
@@ -101,7 +100,7 @@ const Content = () => {
           style={{
             width: "70%",
             margin: "0 auto",
-            color: "#84868c",
+            color: "white",
             textAlign: "center",
             fontSize: "15px",
           }}
@@ -112,7 +111,7 @@ const Content = () => {
           style={{
             width: "70%",
             margin: "0 auto",
-            color: "#84868c",
+            color: "#ffffff",
             textAlign: "center",
             fontSize: "15px",
           }}
@@ -159,20 +158,19 @@ const Content = () => {
                     >
                       <MyLottie style={{ height: "80%" }} type={item.type} />
                     </div>
-                    <h3 style={{ color: "#454a52" }}>{item.title}</h3>
-                    <p style={{ color: "#84868c" }}>{item.desc}</p>
+                    <h3 style={{ color: "white" }}>{item.title}</h3>
+                    <p style={{ color: "#f5f5f5" }}>{item.desc}</p>
                   </div>
                   <div
                     style={{
                       height: "40vh",
-                      //   width: "20px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                     }}
                   >
                     <RightCircleFilled
-                      style={{ color: "#84868c", fontSize: "20px" }}
+                      style={{ color: "#f6f8fa", fontSize: "20px" }}
                     />
                   </div>
                 </List.Item>
@@ -190,10 +188,10 @@ const Content = () => {
                     <MyLottie style={{ height: "80%" }} type={item.type} />
                   </List.Item>
                   <List.Item>
-                    <h3 style={{ color: "#454a52" }}>{item.title}</h3>
+                    <h3 style={{ color: "white" }}>{item.title}</h3>
                   </List.Item>
                   <List.Item>
-                    <p style={{ color: "#84868c" }}>{item.desc}</p>
+                    <p style={{ color: "#f5f5f5" }}>{item.desc}</p>
                   </List.Item>
                 </div>
               )}
@@ -202,20 +200,25 @@ const Content = () => {
         />
         <div className="StepWrapper">
           <Steps
+            style={{ backgroundColor: "white important" }}
             labelPlacement="vertical"
             direction="vertical"
             size="small"
             current={currentStep}
-            status="process"
+            status="finish"
             items={[
               {
+                style: {
+                  backgroundColor: "white !important",
+                  fontWeight: "1000em",
+                },
                 title: "上传测试集",
                 icon: (
                   <>
                     {currentStep === 0 ? (
-                      <CloudUploadOutlined />
+                      <CloudUploadOutlined style={{ color: "#a9b2fc" }} />
                     ) : (
-                      <CheckCircleFilled />
+                      <CloudUploadOutlined style={{ color: "#4162e6" }} />
                     )}
                   </>
                 ),
@@ -224,10 +227,10 @@ const Content = () => {
                 title: "在线测试",
                 icon: (
                   <>
-                    {currentStep <= 1 ? (
-                      <CloudSyncOutlined />
+                    {currentStep < 1 ? (
+                      <CloudSyncOutlined style={{ color: "#a9b2fc" }} />
                     ) : (
-                      <CheckCircleFilled />
+                      <CloudSyncOutlined style={{ color: "#4162e6" }} />
                     )}
                   </>
                 ),
@@ -236,10 +239,10 @@ const Content = () => {
                 title: "结果可视化",
                 icon: (
                   <>
-                    {currentStep <= 2 ? (
-                      <FundViewOutlined />
+                    {currentStep < 2 ? (
+                      <FundViewOutlined style={{ color: "#a9b2fc" }} />
                     ) : (
-                      <CheckCircleFilled />
+                      <FundViewOutlined style={{ color: "#4162e6" }} />
                     )}
                   </>
                 ),
@@ -249,10 +252,10 @@ const Content = () => {
                 disabled: true,
                 icon: (
                   <>
-                    {currentStep <= 3 ? (
-                      <CloudDownloadOutlined />
+                    {currentStep < 3 ? (
+                      <CloudDownloadOutlined style={{ color: "#a9b2fc" }} />
                     ) : (
-                      <CheckCircleFilled />
+                      <CloudDownloadOutlined style={{ color: "#4162e6" }} />
                     )}
                   </>
                 ),

@@ -7,7 +7,7 @@ const OnlineExercise = () => {
     <>
       <Header />
       <Content />
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

@@ -7,7 +7,7 @@ const OnlineTest = () => {
       <>
         <Header />
         <Content />
-        <Footer />
+        {/* <Footer /> */}
       </>
     );
 };
