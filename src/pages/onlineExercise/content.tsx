@@ -1,4 +1,4 @@
-import { FloatButton, List, Steps } from "antd";
+import { List, Steps } from "antd";
 import MyLottie from "../../components/lottie";
 import "./css/content.css";
 import {
@@ -8,12 +8,8 @@ import {
   CloudDownloadOutlined,
   CloudSyncOutlined,
   FundViewOutlined,
-  HomeOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
-import MyIcon from "../../components/iconfont";
-import ExitModal from "./exitModal";
-import { useNavigate } from "react-router-dom";
 
 const exciseAccess = [
   {
@@ -43,46 +39,11 @@ const exciseAccess = [
 ];
 
 const Content = () => {
-  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-    const [modalOpen, setModalOpen] = useState(false);
-    const [exitOpt,setExitOpt] = useState(0);
 
-   const onCancelAction = () => {//确认退出
-    if (exitOpt === 1) navigate("/");
-    else navigate("/onlineTest");
-    setModalOpen(false);
-   };
-   const onOkAction = () => {//取消退出
-     setModalOpen(false);
-   };
 
   return (
     <div className="Content1">
-      <FloatButton
-        style={{ left: 20, top: 10, zIndex: 999 }}
-        icon={<HomeOutlined style={{ color: "#9da5fb" }} />}
-        tooltip={<div placeholder="bottom">返回LyL主页</div>}
-        onClick={() => {
-          setModalOpen(true);
-          setExitOpt(1);
-        }}
-      />
-      <FloatButton
-        style={{ left: 70, top: 10, zIndex: 999 }}
-        icon={<MyIcon type="icon-pingtaishujuceshi" />}
-        tooltip={<div placeholder="bottom">前往在线测试</div>}
-        onClick={() => {
-          setModalOpen(true);
-          setExitOpt(0);
-        }}
-      />
-      <ExitModal
-        isOpen={modalOpen}
-        onCancel={onCancelAction}
-        onOk={onOkAction}
-      />
-
       <div className="TextWrapper">
         <p
           style={{

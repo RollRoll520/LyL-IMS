@@ -5,10 +5,8 @@ export const defaultImg = logo;
 /**
  * 服务器地址
  */
-// export const serverUrl = 'http://localhost:8000/';
-// export const imageServerUrl = "http://localhost:8000/";
-export const serverUrl = "https://roll0814.cn:8000/";
-// export const serverUrl = "/api";
+export const imageServerUrl = "http://localhost:8000/";
+export const serverUrl = "https://roll0814.cn/zja/";
 
 /**
  * lottie文件传输地址

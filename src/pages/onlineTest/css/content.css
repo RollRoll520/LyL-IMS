@@ -1,48 +1,92 @@
 .Content2 {
   background-color: #c8c5f7;
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   position: relative;
   text-align: center;
   border-color: #666;
-  display: grid; /* 设置grid布局 */
-  grid-template-rows: auto 1fr; /* 第一个子元素占据自适应高度，第二个子元素占据剩余高度 */
-  padding-top: 60px;
-  padding-bottom: 0px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding-top: 12vh; /* 将60px转换为相对单位 */
+  padding-bottom: 0;
   overflow: hidden;
 }
 
 .Content2 .TextWrapper {
   align-self: center;
-  padding-top: 20px;
-  padding-bottom: 15px;
+  padding-top: 1.25vh; /* 将20px转换为相对单位 */
+  padding-bottom: 0.9375vh; /* 将15px转换为相对单位 */
 }
 
-
-
 .Content2 .LottieWrapper {
-  z-index: 1;
+  z-index: 0;
   margin-right: auto;
   margin-left: 0;
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 280px;
+  width: 18.75vw; /* 将280px转换为相对单位 */
 }
+
 .Content2 .StepWrapper {
   z-index: 99;
-  margin-right: 20px;
+  margin-right: 1.25vw; /* 将20px转换为相对单位 */
   position: absolute;
-  bottom: 10px;
+  bottom: 1.25vh; /* 将20px转换为相对单位 */
   right: 0;
 }
 
 @media (max-width: 768px) {
   .LottieWrapper {
-    width: 250px;
+    width: 15.625vw; /* 将250px转换为相对单位 */
+  }
+
+  .Content2 .StepWrapper {
+    bottom: 7.5vh; /* 将60px转换为相对单位 */
   }
 }
 
-/* .ant-steps-item-title{
-  color: #eeeaf5 !important;
-} */
+@media (max-width: 576px) {
+  .Content2 .StepWrapper {
+    position: static;
+    text-align: center;
+  }
+
+  .Content2 .TextWrapper {
+    padding-top: 0.625vh; /* 将10px转换为相对单位 */
+    padding-bottom: 0.625vh; /* 将10px转换为相对单位 */
+  }
+}
+
+@media (max-width: 480px) {
+  .LottieWrapper {
+    width: 30vw; /* 将宽度从15.625vw变为30vw，或者您可以使用其他适当的值 */
+  }
+  .Content2 .StepWrapper {
+    labelplacement: "horizontal";
+    direction: "horizontal";
+    size: "small";
+    margin: 0 auto; /* 将20px转换为相对单位 */
+  }
+  .Content2 .LottieWrapper {
+    width: 50vw; /* 将宽度从18.75vw变为50vw，或者您可以使用其他适当的值 */
+  }
+}
+
+@media (max-width: 360px) {
+  .Content2 .StepWrapper {
+    labelplacement: "vertical";
+  }
+}
+
+@media (max-width: 320px) {
+  .Content2 .StepWrapper {
+    size: "small";
+  }
+}
+
+@media (max-width: 375px) {
+  .Content2 .TextWrapper {
+    font-size: 0.875rem; /* 将14px转换为相对单位 */
+  }
+}
