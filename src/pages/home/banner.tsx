@@ -50,7 +50,7 @@ const Banner = () => {
           <span style={{ color: "white" }}>测试</span>一站式解决方案
         </p>
         <Col>
-          <Link to="/OnlineExercise">
+          <Link to="/OnlineTrain">
             <Button
               className="link1 link-container"
               type="primary"

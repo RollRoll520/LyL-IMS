@@ -1,4 +1,4 @@
-import {  List, Steps } from "antd";
+import { List, Steps } from "antd";
 import MyLottie from "../../components/lottie";
 import "./css/content.css";
 import {
@@ -40,10 +40,8 @@ const exciseAccess = [
 const Content = () => {
   const [currentStep, setCurrentStep] = useState(2);
 
-
   return (
     <div className="Content2">
-      
 
       <div className="TextWrapper">
         <p

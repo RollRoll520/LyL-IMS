@@ -5,7 +5,7 @@ import { HomeOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { FloatButton } from "antd";
 import MyIcon from "../../components/iconfont";
-import ExitModal from "../onlineExercise/exitModal";
+import ExitModal from "../onlineTrain/exitModal";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Header = () => {
     const onCancelAction = () => {
       //确认退出
       if (exitOpt === 0) navigate("/");
-      else navigate("/onlineExercise");
+      else navigate("/onlineTrain");
       setModalOpen(false);
     };
     const onOkAction = () => {

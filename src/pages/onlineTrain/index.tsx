@@ -2,7 +2,7 @@ import Footer from "../home/footer";
 import Content from "./content";
 import Header from "./header";
 
-const OnlineExercise = () => {
+const OnlineTrain = () => {
   return (
     <>
       <Header />
@@ -12,4 +12,4 @@ const OnlineExercise = () => {
   );
 };
 
-export default OnlineExercise;
+export default OnlineTrain;

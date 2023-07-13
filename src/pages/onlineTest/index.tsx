@@ -1,4 +1,4 @@
-import Footer from "../home/footer";
+// import Footer from "../home/footer";
 import Content from "./content";
 import Header from "./header";
 
