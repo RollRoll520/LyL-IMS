@@ -1,17 +1,22 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import TestReactSpring from "./pages/testReactSpring";
-import Home from "./pages/home";
-import OnlineTrain from "./pages/onlineTrain";
-import OnlineTest from "./pages/onlineTest";
+import TrainWelcome from "./pages/onlineTest/testWelcome";
+import TestWelcome from "./pages/onlineTest/testWelcome";
+import TestLayout from "./pages/onlineTest/component/TestLayout";
+import TrainLayout from "./pages/onlineTrain/component/TrainLayout";
 
 function App() {
   return (
     <Routes>
-      <Route path="/TestSpring" element={<TestReactSpring />}></Route>
-      <Route path="/" element={<Home />}></Route>
-      <Route path="/OnlineTrain" element={<OnlineTrain />}></Route>
-      <Route path="/OnlineTest" element={<OnlineTest />}></Route>
+      <Route element={<TrainLayout />}>
+        <Route path="trainWelcome" element={<TrainWelcome />}></Route>
+      </Route>
+      <Route element={<TestLayout />}>
+        <Route
+          path="testWelcome"
+          element={<TestWelcome />}
+        ></Route>
+      </Route>
     </Routes>
   );
 }

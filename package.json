@@ -22,6 +22,7 @@
     "enquire-js": "^0.2.1",
     "lottie-web": "^5.12.2",
     "maath": "^0.6.0",
+    "moment": "^2.29.4",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
     "react-app-rewired": "^2.2.1",

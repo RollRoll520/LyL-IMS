@@ -8,7 +8,7 @@
   scroll-snap-type: y mandatory; /* 纵向滚动时必须滚动到元素的位置才触发滚动 */
 }
 
-.title {
+.Content .title {
   text-align: center;
   position: relative;
   top: 5vh;

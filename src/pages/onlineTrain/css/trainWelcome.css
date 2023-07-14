@@ -1,56 +1,25 @@
 .Content1 {
-  width: 100%;
-  min-height: 100vh;
+  width: auto;
+  height: 100%;
   position: relative;
   text-align: center;
   border-color: #666;
   display: grid;
-  grid-template-rows: auto 1fr;
-  padding-top: 12vh; /* 将60px转换为相对单位 */
+  grid-template-rows: auto 5fr;
+  padding-top: 6vh; /* 将60px转换为相对单位 */
   padding-bottom: 0;
   overflow: hidden;
 }
 
 .Content1 .TextWrapper {
   align-self: center;
+  width: auto;
+  margin: 0;
   padding-top: 1.25vh; /* 将20px转换为相对单位 */
   padding-bottom: 0.9375vh; /* 将15px转换为相对单位 */
 }
 
-.Content1 .LottieWrapper {
-  z-index: -1;
-  margin-right: auto;
-  margin-left: 0;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 25vw; /* 将280px转换为相对单位 */
-}
-
-.Content1 .StepWrapper {
-  z-index: 99;
-  margin-right: 1.25vw; /* 将20px转换为相对单位 */
-  position: absolute;
-  bottom: 1.25vh; /* 将20px转换为相对单位 */
-  right: 0;
-}
-
-@media (max-width: 768px) {
-  .LottieWrapper {
-    width: 15.625vw; /* 将250px转换为相对单位 */
-  }
-
-  .Content1 .StepWrapper {
-    bottom: 7.5vh; /* 将60px转换为相对单位 */
-  }
-}
-
 @media (max-width: 576px) {
-  .Content1 .StepWrapper {
-    position: static;
-    text-align: center;
-  }
-
   .Content1 .TextWrapper {
     padding-top: 0.625vh; /* 将10px转换为相对单位 */
     padding-bottom: 0.625vh; /* 将10px转换为相对单位 */

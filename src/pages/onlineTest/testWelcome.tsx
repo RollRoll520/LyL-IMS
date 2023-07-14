@@ -1,14 +1,13 @@
-import { List, Steps } from "antd";
+import { Card, Col, List, Row, Statistic } from "antd";
 import MyLottie from "../../components/lottie";
-import "./css/content.css";
+import "./css/testWelcome.css";
 import {
+  DatabaseOutlined,
+  HistoryOutlined,
   RightCircleFilled,
-  CloudUploadOutlined,
-  CloudDownloadOutlined,
-  CloudSyncOutlined,
-  FundViewOutlined,
+  RightOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const exciseAccess = [
   {
@@ -27,7 +26,7 @@ const exciseAccess = [
     hasArrow: true,
     type: "real-time-data",
     title: "测试结果可视化",
-    desc: "将在线测试结果可视化展示",
+    desc: "将测试结果可视化展示",
   },
   {
     hasArrow: false,
@@ -37,17 +36,17 @@ const exciseAccess = [
   },
 ];
 
-const Content = () => {
-  const [currentStep, setCurrentStep] = useState(2);
-
+const TestWelcome = () => {
+  const navigate = useNavigate();
   return (
     <div className="Content2">
-
       <div className="TextWrapper">
         <p
           style={{
-            width: "70%",
+            width: "100%",
+            height: "100%",
             margin: "0 auto",
+            padding: "0",
             color: "white",
             textAlign: "center",
             fontSize: "15px",
@@ -82,13 +81,14 @@ const Content = () => {
         style={{
           margin: "0",
           padding: "0",
-          width: "100vw",
+          height: "40vh",
+          width: "100%",
           display: "flex",
           justifyContent: "center",
         }}
       >
         <List
-          style={{ width: "80vw" }}
+          style={{ width: "85%" }}
           dataSource={exciseAccess}
           grid={{
             gutter: 4,
@@ -105,7 +105,7 @@ const Content = () => {
                 <List.Item
                   style={{ display: "grid", gridTemplateColumns: "3fr 1fr" }}
                 >
-                  <div style={{ height: "40vh" }}>
+                  <div style={{ height: "38vh" }}>
                     <div
                       style={{
                         height: "20vh",
@@ -122,7 +122,7 @@ const Content = () => {
                   </div>
                   <div
                     style={{
-                      height: "40vh",
+                      height: "38vh",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -157,77 +157,112 @@ const Content = () => {
             </>
           )}
         />
-        <div className="StepWrapper">
-          <Steps
-            style={{ backgroundColor: "white important" }}
-            labelPlacement="vertical"
-            direction="vertical"
-            size="default"
-            current={currentStep}
-            status="finish"
-            items={[
-              {
-                style: {
-                  backgroundColor: "white !important",
-                  fontWeight: "1000em",
-                },
-                title: "上传测试集",
-                icon: (
-                  <>
-                    {currentStep === 0 ? (
-                      <CloudUploadOutlined style={{ color: "#a9b2fc" }} />
-                    ) : (
-                      <CloudUploadOutlined style={{ color: "#4162e6" }} />
-                    )}
-                  </>
-                ),
-              },
-              {
-                title: "在线测试",
-                icon: (
-                  <>
-                    {currentStep < 1 ? (
-                      <CloudSyncOutlined style={{ color: "#a9b2fc" }} />
-                    ) : (
-                      <CloudSyncOutlined style={{ color: "#4162e6" }} />
-                    )}
-                  </>
-                ),
-              },
-              {
-                title: "结果可视化",
-                icon: (
-                  <>
-                    {currentStep < 2 ? (
-                      <FundViewOutlined style={{ color: "#a9b2fc" }} />
-                    ) : (
-                      <FundViewOutlined style={{ color: "#4162e6" }} />
-                    )}
-                  </>
-                ),
-              },
-              {
-                title: "下载结果",
-                disabled: true,
-                icon: (
-                  <>
-                    {currentStep < 3 ? (
-                      <CloudDownloadOutlined style={{ color: "#a9b2fc" }} />
-                    ) : (
-                      <CloudDownloadOutlined style={{ color: "#4162e6" }} />
-                    )}
-                  </>
-                ),
-              },
-            ]}
-          />
-        </div>
-        <div className="LottieWrapper">
-          <MyLottie type="working-on-computer-desk-illustration" />
-        </div>
+      </div>
+
+      <div
+        style={{
+          marginBottom: "100px",
+          padding: "0",
+          height: "20vh",
+          width: "100%",
+          justifyContent: "center",
+        }}
+      >
+        <Row gutter={2} justify="center" style={{ textAlign: "center" }}>
+          <Col span={4}>
+            <Card
+              title={
+                <div style={{ color: "#c8c5f7" }}>
+                  <DatabaseOutlined />
+                  测试集
+                </div>
+              }
+              onClick={() => navigate("/test/dataset")}
+              extra={<RightOutlined style={{ color: "#c8c5f7" }} />}
+              bordered={true}
+              hoverable={true}
+              style={{ backgroundColor: "white" }}
+            >
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Statistic
+                    title={
+                      <p
+                        style={{
+                          color: "#c8c5f7",
+                          margin: "0",
+                          padding: "0",
+                        }}
+                      >
+                        单条
+                      </p>
+                    }
+                    value={93}
+                    valueStyle={{ color: "#c8c5f7" }}
+                  />
+                </Col>
+
+                <Col span={12}>
+                  <Statistic
+                    title={
+                      <p
+                        style={{ color: "#c8c5f7", margin: "0", padding: "0" }}
+                      >
+                        多条
+                      </p>
+                    }
+                    value={93}
+                    valueStyle={{ color: "#c8c5f7" }}
+                  />
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={4}>
+            <Card
+              title={
+                <div style={{ color: "white" }}>
+                  <HistoryOutlined />
+                  测试记录
+                </div>
+              }
+              extra={<RightOutlined style={{ color: "white" }} />}
+              onClick={() => navigate("/test/record")}
+              bordered={true}
+              hoverable={true}
+              style={{ backgroundColor: "rgb(200, 197, 247)" }}
+            >
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Statistic
+                    title={
+                      <p style={{ color: "white", margin: "0", padding: "0" }}>
+                        单条
+                      </p>
+                    }
+                    value={93}
+                    valueStyle={{ color: "white" }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <Statistic
+                    title={
+                      <p style={{ color: "white", margin: "0", padding: "0" }}>
+                        多条
+                      </p>
+                    }
+                    value={93}
+                    valueStyle={{ color: "white" }}
+                  />
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+        </Row>
       </div>
     </div>
   );
 };
 
-export default Content;
+export default TestWelcome;

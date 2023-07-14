@@ -43,7 +43,7 @@ const Content = () => {
         >
           <Col span={7}>
             <Card
-              title="神经网络训练模型"
+              title="机器学习训练模型"
               style={{ backgroundColor: "#9fa0ff", height: "85%" }}
               headStyle={{ color: "white" }}
               cover={
