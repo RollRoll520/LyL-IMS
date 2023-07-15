@@ -58,7 +58,7 @@ const TestLayout = (props: any) => {
   const onLogout = async () => {
     await logout();
     setUser(undefined);
-    navigate("/test/");
+    navigate("/test/welcome");
   };
 
   useEffect(() => {

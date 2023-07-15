@@ -1,12 +1,15 @@
-import { get } from "../utils/request";
+import { get, mulPost } from "../utils/request";
 
-export const loadTrainSet = (u_id: number) => get("/dataset/get_train/" + u_id);
+export const loadTrainSet = (): Promise<any> => get("/dataset/get_train/");
 
-export const loadValidateSet = (u_id: number) =>
-  get("/dataset/get_validate/" + u_id);
+export const loadValidateSet = (): Promise<any> =>
+  get("/dataset/get_validate/");
 
-export const loadSingleTestSet = (u_id: number) =>
-  get("/dataset/get_single_test/" + u_id);
+export const loadSingleTestSet = (): Promise<any> =>
+  get("/dataset/get_single_test/");
 
-export const loadMultipleTestSet = (u_id: number) =>
-  get("/dataset/get_multiple_test/" + u_id);
+export const loadMultipleTestSet = (): Promise<any> =>
+  get("/dataset/get_multiple_test/");
+
+export const uploadDatasetApi = (params: any, data: any): Promise<any> =>
+  mulPost("/dataset/new", params, data);

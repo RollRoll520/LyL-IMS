@@ -20,6 +20,9 @@ import {
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import UploadModal from "../modal/upload.modal";
+import { loadTrainSet, loadValidateSet } from "../../services/dataset.service";
+import { format } from "date-fns";
 
 const items: MenuProps["items"] = [
   {
@@ -37,6 +40,7 @@ const items: MenuProps["items"] = [
 function TrainDataset() {
   const navigate = useNavigate();
   const [isShow, setIsShow] = useState(false); // 控制modal显示和隐藏
+  const [uploadOpen, setUploadOpen] = useState(false);
   const [myForm] = Form.useForm(); // 可以获取表单元素实例
   const [query, setQuery] = useState(1); // 查询条件
   const [data, setData] = useState<any>([
@@ -46,10 +50,24 @@ function TrainDataset() {
       remark: "test",
     },
   ]);
+  const [current, setCurrent] = useState("train");
   const [total, setTotal] = useState(0); // 总数量
   const [currentId, setCurrentId] = useState(""); // 当前id，如果为空表示新增
   const [imageUrl, setImageUrl] = useState<string>(""); // 上传之后的数据
   const [findId, setFindId] = useState("");
+
+  const onUploadCancel = () => {
+    setUploadOpen(false);
+  };
+
+  useEffect(() => {
+    loadTrainSet().then((res) => {
+      if (res.code === 0) {
+        setData(res.result);
+      } else {
+      }
+    });
+  }, []);
 
   //   useEffect(() => {
   //     // 调用 loadProductListAPI 函数获取产品列表数据
@@ -66,26 +84,23 @@ function TrainDataset() {
   //       });
   //   }, [query]); // 监听query改变
 
-  //   useEffect(() => {
-  //     loadProductByIdAPI(findId)
-  //       .then((res) => {
-  //         if (findId !== "0") {
-  //           let li = {
-  //             p_id: res.result.p_id,
-  //             p_type: res.result.p_type,
-  //             p_state: res.result.p_state,
-  //             p_time: res.result.p_time,
-  //             p_img_url: res.result.p_img_url,
-  //           };
-  //           let arr = [li];
-  //           setData(arr);
-  //           setTotal(1); // 设置总数量
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }, [findId]);
+  useEffect(() => {
+    if (current === "validate") {
+      loadValidateSet().then((res) => {
+        if (res.code === 0) {
+          setData(res.result);
+        } else {
+        }
+      });
+    } else {
+      loadTrainSet().then((res) => {
+        if (res.code === 0) {
+          setData(res.result);
+        } else {
+        }
+      });
+    }
+  }, [current]);
 
   useEffect(() => {
     if (!isShow) {
@@ -94,8 +109,6 @@ function TrainDataset() {
       setImageUrl("");
     }
   }, [isShow]);
-
-  const [current, setCurrent] = useState("train");
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
@@ -117,11 +130,12 @@ function TrainDataset() {
           type="primary"
           icon={<CloudUploadOutlined />}
           onClick={() => {
-            navigate(-1); // 返回上一页
+            setUploadOpen(true);
           }}
         >
           上传训练集
         </Button>
+        <UploadModal isOpen={uploadOpen} onCancel={onUploadCancel} />
       </div>
       <Menu
         onClick={onClick}

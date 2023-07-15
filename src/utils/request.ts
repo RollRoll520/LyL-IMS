@@ -47,8 +47,15 @@ instance.interceptors.response.use(
  * @param params  参数
  * @returns
  */
-export const get = (url: string, params: any = {}) =>
-  instance.get(url, { params }).then((res) => res.data);
+export const get = (url: string) =>
+  instance
+    .get(
+      url,
+      {
+        headers: { token: getToken() },
+      }
+    )
+    .then((res) => res.data);
 
 /**
  * post请求

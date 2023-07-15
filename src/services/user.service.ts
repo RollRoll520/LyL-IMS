@@ -14,6 +14,7 @@ type LoginData = {
 export const loginAPI = async (data: LoginData) => {
   try {
     const response = await post("/user/login", data);
+
     if (response.code === 0) {
       setToken(response.result.token); // 将Token保存到sessionStorage中
       setUser({
@@ -35,5 +36,4 @@ export const loginAPI = async (data: LoginData) => {
  * @param data
  * @returns
  */
-export const registerAPI = async (data:any) =>
-  post("/user/register", data);
+export const registerAPI = async (data: any) => post("/user/register", data);

@@ -57,7 +57,7 @@ const TrainLayout = (props: any) => {
   const onLogout = async () => {
     await logout();
     setUser(undefined);
-    navigate("/train/");
+    navigate("/train/welcome");
   };
 
 

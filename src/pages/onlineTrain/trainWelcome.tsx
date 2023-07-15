@@ -8,7 +8,9 @@ import {
   HistoryOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { loadTrainSet, loadValidateSet } from "../../services/dataset.service";
+import { loadTrainRecord } from "../../services/record.service";
 
 const exciseAccess = [
   {
@@ -39,9 +41,30 @@ const exciseAccess = [
 
 const TrainWelcome = () => {
   const navigate = useNavigate();
-  const [trainNum,setTrainNum] = useState(0);
+  const [trainNum, setTrainNum] = useState(0);
   const [validateNum, setValidateNum] = useState(0);
+  const [recordNum, setRecordNum] = useState(0);
 
+  useEffect(() => {
+    loadTrainSet().then((res) => {
+      if (res.code === 0) {
+        setTrainNum(res.count);
+      } else {
+      }
+    });
+    loadValidateSet().then((res) => {
+      if (res.code === 0) {
+        setValidateNum(res.count);
+      } else {
+      }
+    });
+    loadTrainRecord().then((res) => {
+      if (res.code === 0) {
+        setRecordNum(res.count);
+      } else {
+      }
+    });
+  }, []);
 
   return (
     <div className="Content1">
@@ -230,12 +253,9 @@ const TrainWelcome = () => {
               hoverable={true}
               style={{ backgroundColor: "white" }}
             >
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Statistic title="记录数" value={trainNum} />
-                </Col>
-                <Col span={12}>
-                  <Statistic title="模型数" value={validateNum} />
+              <Row justify="center" align="middle" gutter={16}>
+                <Col span={24}>
+                  <Statistic title="记录数" value={recordNum} />
                 </Col>
               </Row>
             </Card>

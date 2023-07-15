@@ -50,9 +50,9 @@ export const logout = async() => {
  * 获取token
  * @returns
  */
-export const getToken = async() => sessionStorage.getItem("token");
+export const getToken = () => sessionStorage.getItem("token");
 
-export const getUser = async() => {
+export const getUser = () => {
   const user = {
     id: sessionStorage.getItem("id"),
     username: sessionStorage.getItem("username"),
