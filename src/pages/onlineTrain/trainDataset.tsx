@@ -1,7 +1,6 @@
 import {
   Card,
   Button,
-  Form,
   Table,
   Space,
   Popconfirm,
@@ -13,16 +12,15 @@ import {
   CloudUploadOutlined,
   DeleteOutlined,
   EditOutlined,
-  EyeOutlined,
   FlagOutlined,
   RocketOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UploadModal from "../modal/upload.modal";
 import { loadTrainSet, loadValidateSet } from "../../services/dataset.service";
-import { format } from "date-fns";
+import TrainModal from "../modal/train.modal";
+import TrainUploadModal from "../modal/trainUpload.modal";
 
 const items: MenuProps["items"] = [
   {
@@ -39,76 +37,79 @@ const items: MenuProps["items"] = [
 
 function TrainDataset() {
   const navigate = useNavigate();
-  const [isShow, setIsShow] = useState(false); // 控制modal显示和隐藏
+
+  const [trainOpen, setTrainOpen] = useState(false);
   const [uploadOpen, setUploadOpen] = useState(false);
-  const [myForm] = Form.useForm(); // 可以获取表单元素实例
   const [query, setQuery] = useState(1); // 查询条件
-  const [data, setData] = useState<any>([
-    {
-      id: 230713001,
-      state: "isWaiting",
-      remark: "test",
-    },
-  ]);
+  const [data, setData] = useState<any>([]);
   const [current, setCurrent] = useState("train");
   const [total, setTotal] = useState(0); // 总数量
-  const [currentId, setCurrentId] = useState(""); // 当前id，如果为空表示新增
-  const [imageUrl, setImageUrl] = useState<string>(""); // 上传之后的数据
-  const [findId, setFindId] = useState("");
+  const [currentId, setCurrentId] = useState(); // 当前id，如果为空表示新增
 
-  const onUploadCancel = () => {
-    setUploadOpen(false);
-  };
-
-  useEffect(() => {
-    loadTrainSet().then((res) => {
-      if (res.code === 0) {
-        setData(res.result);
-      } else {
-      }
-    });
-  }, []);
-
-  //   useEffect(() => {
-  //     // 调用 loadProductListAPI 函数获取产品列表数据
-  //     loadProductListAPI(query)
-  //       .then((res) => {
-  //         if (query !== 0) {
-  //           setData(res.result.list);
-  //           setTotal(res.result.total); // 设置总数量
-  //           console.log(res);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }, [query]); // 监听query改变
-
-  useEffect(() => {
+  function refreshDatasetList() {
     if (current === "validate") {
       loadValidateSet().then((res) => {
         if (res.code === 0) {
           setData(res.result);
+          setTotal(res.count);
         } else {
+          console.log(res);
         }
       });
     } else {
       loadTrainSet().then((res) => {
         if (res.code === 0) {
           setData(res.result);
+          setTotal(res.count);
         } else {
+          console.log(res);
+        }
+      });
+    }
+  }
+
+  const onUploadCancel = () => {
+    refreshDatasetList();
+    setUploadOpen(false);
+  };
+
+  const onTrainCancel = () => {
+    refreshDatasetList();
+    setTrainOpen(false);
+  };
+
+  useEffect(() => {
+    loadTrainSet().then((res) => {
+      if (res.code === 0) {
+        setData(res.result);
+        setTotal(res.count);
+      } else {
+        console.log(res);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (current === "validate") {
+      loadValidateSet().then((res) => {
+        if (res.code === 0) {
+          setData(res.result);
+          setTotal(res.count);
+        } else {
+          console.log(res);
+        }
+      });
+    } else {
+      loadTrainSet().then((res) => {
+        if (res.code === 0) {
+          setData(res.result);
+          setTotal(res.count);
+        } else {
+          console.log(res);
         }
       });
     }
   }, [current]);
-
-  useEffect(() => {
-    if (!isShow) {
-      // 关闭弹窗之后重置数据
-      setCurrentId("");
-      setImageUrl("");
-    }
-  }, [isShow]);
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
@@ -135,7 +136,13 @@ function TrainDataset() {
         >
           上传训练集
         </Button>
-        <UploadModal isOpen={uploadOpen} onCancel={onUploadCancel} />
+        <TrainUploadModal isOpen={uploadOpen} onCancel={onUploadCancel} />
+        <TrainModal
+          trainOrValidate={current === "train"}
+          isOpen={trainOpen}
+          onCancel={onTrainCancel}
+          id={currentId}
+        />
       </div>
       <Menu
         onClick={onClick}
@@ -174,12 +181,7 @@ function TrainDataset() {
                           color: "#182e67",
                           borderColor: "#182e67",
                         }}
-                        onClick={() => {
-                          setIsShow(true);
-                          setCurrentId(r.p_id);
-                          setImageUrl(r.p_img_url);
-                          myForm.setFieldsValue(r);
-                        }}
+                        onClick={() => {}}
                       />
                       {r.remark}
                     </>
@@ -187,7 +189,7 @@ function TrainDataset() {
                 },
               },
               {
-                title: "状态",
+                title: "训练进度",
                 width: 80,
                 align: "center",
                 render(v, r: any) {
@@ -206,7 +208,7 @@ function TrainDataset() {
                         </div>
                       </>
                     );
-                  } else if (r.p_state === "isFinished") {
+                  } else if (r.state === "isFinished") {
                     label = (
                       <>
                         <div
@@ -243,7 +245,16 @@ function TrainDataset() {
                 width: 120,
                 align: "center",
                 render(v, r) {
-                  return <>{r.upload_time}</>;
+                  const date = new Date(r.upload_time);
+                  const year = date.getFullYear();
+                  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+                  const day = ("0" + date.getDate()).slice(-2);
+                  const hours = ("0" + date.getHours()).slice(-2);
+                  const minutes = ("0" + date.getMinutes()).slice(-2);
+                  const seconds = ("0" + date.getSeconds()).slice(-2);
+                  return (
+                    <>{`${year}.${month}.${day}/${hours}:${minutes}:${seconds}`}</>
+                  );
                 },
               },
               {
@@ -259,10 +270,12 @@ function TrainDataset() {
                         icon={<RocketOutlined />}
                         size="small"
                         onClick={() => {
-                          navigate(`/admin/UsageList/${r.p_id}`); // 导航到带有 u_p_id 参数设置为 r.p_id 的 UsageList 页面
+                          setCurrentId(r.id);
+                          setTrainOpen(true);
                         }}
                       />
-                      <Button
+                      {/* //todo:添加 */}
+                      {/* <Button
                         type="primary"
                         style={{ backgroundColor: "#182e67" }}
                         icon={<EyeOutlined />}
@@ -270,14 +283,11 @@ function TrainDataset() {
                         onClick={() => {
                           navigate(`/admin/UsageList/${r.p_id}`); // 导航到带有 u_p_id 参数设置为 r.p_id 的 UsageList 页面
                         }}
-                      />
+                      /> */}
 
-                      <Popconfirm
+                      {/* <Popconfirm
                         title="是否确认删除此项?"
-                        onConfirm={async () => {
-                          //   await delProductByIdAPI(r.p_id);
-                          setQuery(1); // 重新加载数据
-                        }}
+                        onConfirm={async () => {}}
                       >
                         <Button
                           type="primary"
@@ -285,7 +295,7 @@ function TrainDataset() {
                           size="small"
                           danger
                         />
-                      </Popconfirm>
+                      </Popconfirm> */}
                     </Space>
                   );
                 },

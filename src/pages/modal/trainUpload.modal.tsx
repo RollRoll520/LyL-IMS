@@ -3,7 +3,7 @@ import { Button, Form, Input, Modal, Radio, UploadProps, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import Dragger from "antd/es/upload/Dragger";
 import { uploadDatasetApi } from "../../services/dataset.service";
-import { getToken } from "../../utils/tools";
+import { getToken, serverUrl } from "../../utils/tools";
 import { useState } from "react";
 
 interface UploadModalProps {
@@ -11,7 +11,7 @@ interface UploadModalProps {
   onCancel: () => void;
 }
 
-const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onCancel }) => {
+const TrainUploadModal: React.FC<UploadModalProps> = ({ isOpen, onCancel }) => {
   const [typeValue, setTypeValue] = useState<string | undefined>(undefined); // 使用useState保存type字段的值
 
   const onFinish = async (values: any) => {
@@ -19,28 +19,37 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onCancel }) => {
   };
 
   const handleUpload = async (file: any) => {
+    const xhr = new XMLHttpRequest();
     const formData = new FormData();
     formData.append("dataset", file);
-    formData.append("type", form.getFieldValue("type")); // 使用typeValue来获取type字段的值
+    formData.append("type", form.getFieldValue("type"));
     formData.append("remark", form.getFieldValue("remark"));
 
-    try {
-      console.log(getToken());
-      const res = await uploadDatasetApi(formData, {
-        headers: { token: getToken() },
-      });
+    const token = getToken();    
+    xhr.open("POST", serverUrl+"dataset/new", true);
+    xhr.setRequestHeader("token",token!);
 
-      if (res.code === 0) {
+    xhr.upload.onprogress = function (e) {
+      const percent = Math.round((e.loaded / e.total) * 100);
+      message.loading(`上传进度：${percent}%`);
+      if(percent===100) message.warning("请耐心等待服务器接收数据！");
+    };
+    
+
+    xhr.onload = function () {
+      if (xhr.status === 200) {
         message.success("上传成功");
         onCancel();
       } else {
-        console.log(res);
         message.error("上传失败");
       }
-    } catch (err) {
-      console.log(err);
-      message.error("上传失败");
-    }
+    };
+
+    xhr.onerror = function () {
+      console.log("上传失败");
+    };
+
+    xhr.send(formData);
   };
 
   const [form] = Form.useForm();
@@ -116,4 +125,4 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onCancel }) => {
   );
 };
 
-export default UploadModal;
+export default TrainUploadModal;

@@ -31,13 +31,14 @@ const TrainLayout = (props: any) => {
   const [registerOpen, setRegisterOpen] = useState(false); //注册对话
   const [user, setUser] = useState<User>(); //用户
   const [greeting, setGreeting] = useState(""); //hello
-  const [selectedKey,setSelectedKey] = useState([""]);
+  const [selectedKey, setSelectedKey] = useState([""]);
 
   const onLoginCancel = () => {
     setLoginOpen(false);
   };
   const onOk = async () => {
     setUser(await getUser());
+    navigate("/train/welcome");
   };
 
   const onRegisterCancel = () => {
@@ -59,8 +60,6 @@ const TrainLayout = (props: any) => {
     setUser(undefined);
     navigate("/train/welcome");
   };
-
-
 
   useEffect(() => {
     async function updateUser() {
@@ -109,18 +108,6 @@ const TrainLayout = (props: any) => {
           zIndex: "999",
         }}
       >
-        <RegisterModal
-          isOpen={registerOpen}
-          onCancel={onRegisterCancel}
-          onRegister2Login={onRegister2Login}
-        />
-        <LoginModal
-          isOpen={loginOpen}
-          onCancel={onLoginCancel}
-          onLogin2Register={onLogin2Register}
-          onOk={onOk}
-        />
-
         <div
           className="title"
           style={{
@@ -212,6 +199,17 @@ const TrainLayout = (props: any) => {
               </p>
             </>
           )}
+          <RegisterModal
+            isOpen={registerOpen}
+            onCancel={onRegisterCancel}
+            onRegister2Login={onRegister2Login}
+          />
+          <LoginModal
+            isOpen={loginOpen}
+            onCancel={onLoginCancel}
+            onLogin2Register={onLogin2Register}
+            onOk={onOk}
+          />
           <Dropdown
             menu={{
               items: [

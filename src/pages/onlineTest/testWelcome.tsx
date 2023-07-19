@@ -8,6 +8,10 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import userEvent from "@testing-library/user-event";
+import { loadMultipleTestSet, loadSingleTestSet } from "../../services/dataset.service";
+import { loadMultipleTestRecord, loadSingleTestRecord } from "../../services/record.service";
 
 const exciseAccess = [
   {
@@ -38,6 +42,36 @@ const exciseAccess = [
 
 const TestWelcome = () => {
   const navigate = useNavigate();
+
+  const [singleNum,setSingleNum] = useState(0);
+  const [multipleNum,setMultipleNum] = useState(0);
+  const [singleRecordNum,setSingleRecordNum] = useState(0);
+  const [multipleRecordNum,setMultipleRecordNum] = useState(0);
+
+  useEffect(()=>{
+    loadSingleTestSet().then((res)=>{
+      if(res.code===0){
+        setSingleNum(res.count);
+      }
+      else console.log(res)
+    });
+    loadMultipleTestSet().then((res)=>{
+      if(res.code===0){
+        setMultipleNum(res.count);
+      }else console.log(res);
+    })
+    loadSingleTestRecord().then((res)=>{
+      if(res.code===0){
+        setSingleRecordNum(res.count);
+      }else console.log(res);
+    })
+    loadMultipleTestRecord().then((res)=>{
+      if(res.code===0){
+        setMultipleRecordNum(res.count);
+      }else console.log(res);
+    })
+  },[])
+
   return (
     <div className="Content2">
       <div className="TextWrapper">
@@ -197,7 +231,7 @@ const TestWelcome = () => {
                         单条
                       </p>
                     }
-                    value={93}
+                    value={singleNum}
                     valueStyle={{ color: "#c8c5f7" }}
                   />
                 </Col>
@@ -211,7 +245,7 @@ const TestWelcome = () => {
                         多条
                       </p>
                     }
-                    value={93}
+                    value={multipleNum}
                     valueStyle={{ color: "#c8c5f7" }}
                   />
                 </Col>
@@ -241,7 +275,7 @@ const TestWelcome = () => {
                         单条
                       </p>
                     }
-                    value={93}
+                    value={singleRecordNum}
                     valueStyle={{ color: "white" }}
                   />
                 </Col>
@@ -252,7 +286,7 @@ const TestWelcome = () => {
                         多条
                       </p>
                     }
-                    value={93}
+                    value={multipleRecordNum}
                     valueStyle={{ color: "white" }}
                   />
                 </Col>

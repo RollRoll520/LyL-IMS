@@ -43,6 +43,7 @@ const TestLayout = (props: any) => {
 
   const onRegisterCancel = () => {
     setRegisterOpen(false);
+    navigate("/test/welcome");
   };
 
   const onLogin2Register = () => {
@@ -60,6 +61,14 @@ const TestLayout = (props: any) => {
     setUser(undefined);
     navigate("/test/welcome");
   };
+
+    const handleMenuSelect = ({ key }: any) => {
+      if (!user && key !== "") {
+        setLoginOpen(true);
+      } else {
+        navigate(`/test/${key}`);
+      }
+    };
 
   useEffect(() => {
     async function updateUser() {
@@ -108,17 +117,6 @@ const TestLayout = (props: any) => {
           zIndex: "999",
         }}
       >
-        <RegisterModal
-          isOpen={registerOpen}
-          onCancel={onRegisterCancel}
-          onRegister2Login={onRegister2Login}
-        />
-        <LoginModal
-          isOpen={loginOpen}
-          onCancel={onLoginCancel}
-          onLogin2Register={onLogin2Register}
-          onOk={onOk}
-        />
         <div
           className="title"
           style={{
@@ -210,6 +208,17 @@ const TestLayout = (props: any) => {
               </p>
             </>
           )}
+          <RegisterModal
+            isOpen={registerOpen}
+            onCancel={onRegisterCancel}
+            onRegister2Login={onRegister2Login}
+          />
+          <LoginModal
+            isOpen={loginOpen}
+            onCancel={onLoginCancel}
+            onLogin2Register={onLogin2Register}
+            onOk={onOk}
+          />
           <Dropdown
             menu={{
               items: [
@@ -305,6 +314,7 @@ const TestLayout = (props: any) => {
             theme="light"
             mode="inline"
             selectedKeys={selectedKey}
+            onSelect={handleMenuSelect}
             defaultSelectedKeys={["welcome"]}
             style={{ backgroundColor: "white" }}
           >

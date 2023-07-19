@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <Route path="*" element={<Home />} />
         <Route
           path="/testAntv"
-          element={<MyHeatmap params={{ type: "train", record_id: 2 }} />}
+          element={<MyHeatmap params={{ type: "train", record_id: 39 }} />}
         />
         <Route path="/train/*" element={<Train />} />
         <Route path="/test/*" element={<Test />} />

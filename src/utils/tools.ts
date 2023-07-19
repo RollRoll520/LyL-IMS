@@ -12,7 +12,11 @@ type User = {
  * 服务器地址
  */
 export const imageServerUrl = "http://localhost:8000/";
-export const serverUrl = "http://localhost:8001/";
+export const serverUrl = "https://roll0814.cn/lyl/";
+// export const serverUrl = "https://roll0814.cn:8001/";
+
+// export const serverUrl = "http://localhost:8001/";
+
 
 /**
  * lottie文件传输地址

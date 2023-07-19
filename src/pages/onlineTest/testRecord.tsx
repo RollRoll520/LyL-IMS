@@ -1,30 +1,19 @@
+import { Card, Button, Form, Table, Space, Menu, MenuProps } from "antd";
 import {
-  Card,
-  Button,
-  Form,
-  Table,
-  Space,
-  Popconfirm,
-  Menu,
-  MenuProps,
-  Badge,
-} from "antd";
-import {
-  AppstoreOutlined,
   BarChartOutlined,
   BlockOutlined,
   BorderOutlined,
-  BuildOutlined,
-  CloudDownloadOutlined,
-  CloudUploadOutlined,
-  DeleteOutlined,
   EditOutlined,
-  EyeOutlined,
-  MailOutlined,
-  RocketOutlined,
+  FileZipOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  loadMultipleTestRecord,
+  loadSingleTestRecord,
+} from "../../services/record.service";
+import TestResultModal from "../modal/testResult.modal";
+import { downloadTestApi } from "../../services/result.service";
 
 const items: MenuProps["items"] = [
   {
@@ -41,70 +30,73 @@ const items: MenuProps["items"] = [
 
 function TestRecord() {
   const navigate = useNavigate();
-  const [isShow, setIsShow] = useState(false); // 控制modal显示和隐藏
   const [myForm] = Form.useForm(); // 可以获取表单元素实例
   const [query, setQuery] = useState(1); // 查询条件
-  const [data, setData] = useState<any>([
-    {
-      id: 230713001,
-      state: "isWaiting",
-      remark: "test",
-    },
-  ]);
+  const [data, setData] = useState<any>([]);
   const [total, setTotal] = useState(0); // 总数量
-  const [currentId, setCurrentId] = useState(""); // 当前id，如果为空表示新增
-  const [imageUrl, setImageUrl] = useState<string>(""); // 上传之后的数据
-  const [findId, setFindId] = useState("");
-
-  //   useEffect(() => {
-  //     // 调用 loadProductListAPI 函数获取产品列表数据
-  //     loadProductListAPI(query)
-  //       .then((res) => {
-  //         if (query !== 0) {
-  //           setData(res.result.list);
-  //           setTotal(res.result.total); // 设置总数量
-  //           console.log(res);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }, [query]); // 监听query改变
-
-  //   useEffect(() => {
-  //     loadProductByIdAPI(findId)
-  //       .then((res) => {
-  //         if (findId !== "0") {
-  //           let li = {
-  //             p_id: res.result.p_id,
-  //             p_type: res.result.p_type,
-  //             p_state: res.result.p_state,
-  //             p_time: res.result.p_time,
-  //             p_img_url: res.result.p_img_url,
-  //           };
-  //           let arr = [li];
-  //           setData(arr);
-  //           setTotal(1); // 设置总数量
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }, [findId]);
-
-  useEffect(() => {
-    if (!isShow) {
-      // 关闭弹窗之后重置数据
-      setCurrentId("");
-      setImageUrl("");
-    }
-  }, [isShow]);
-
+  const [currentId, setCurrentId] = useState(0); // 当前id，如果为空表示新增
+  const [mode, setMode] = useState("single_test");
+  const [resultOpen, setResultOpen] = useState(false);
   const [current, setCurrent] = useState("single");
 
+  function download(url: any, name: any) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    a.click();
+  }
+
+  // useEffect(() => {
+  //   // 定时刷新数据
+
+  //   const intervalId = setInterval(() => {
+  //     if (current === "single") {
+  //       loadSingleTestRecord().then((res) => {
+  //         setData(res.result);
+  //         setTotal(res.count);
+  //       });
+  //     } else if (current === "multiple") {
+  //       loadMultipleTestRecord().then((res) => {
+  //         if (res.code === 0) {
+  //           setData(res.result);
+  //           setTotal(res.count);
+  //         } else {
+  //         }
+  //       });
+  //     }
+  //   }, 10000);
+
+  //   // 组件销毁时清除定时器
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
+  useEffect(() => {
+    loadSingleTestRecord().then((res) => {
+      if (res.code === 0) {
+        setData(res.result);
+        setTotal(res.count);
+      } else {
+      }
+    });
+  }, []);
+
+  const onResultCancel = () => {
+    setResultOpen(false);
+  };
+
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
     setCurrent(e.key);
+    if (e.key === "single") {
+      loadSingleTestRecord().then((res) => {
+        setData(res.result);
+        setTotal(res.count);
+      });
+    } else {
+      loadMultipleTestRecord().then((res) => {
+        setData(res.result);
+        setTotal(res.count);
+      });
+    }
   };
 
   return (
@@ -130,6 +122,14 @@ function TestRecord() {
                 },
               },
               {
+                title: "测试集编号",
+                width: 80,
+                align: "center",
+                render(v, r: any) {
+                  return <>{r.dataset_id}</>;
+                },
+              },
+              {
                 title: "备注",
                 width: 120,
                 align: "center",
@@ -146,12 +146,7 @@ function TestRecord() {
                           color: "#7977ac",
                           borderColor: "#7977ac",
                         }}
-                        onClick={() => {
-                          setIsShow(true);
-                          setCurrentId(r.p_id);
-                          setImageUrl(r.p_img_url);
-                          myForm.setFieldsValue(r);
-                        }}
+                        onClick={() => {}}
                       />
                       {r.remark}
                     </>
@@ -159,63 +154,20 @@ function TestRecord() {
                 },
               },
               {
-                title: "状态",
-                width: 80,
-                align: "center",
-                render(v, r: any) {
-                  let label;
-                  if (r.state === "isWaiting") {
-                    label = (
-                      <>
-                        <div
-                          style={{
-                            color: "#007acc",
-                            lineHeight: "15px",
-                            fontSize: "15px",
-                          }}
-                        >
-                          <Badge status="processing" text="未完成" />
-                        </div>
-                      </>
-                    );
-                  } else if (r.p_state === "isFinished") {
-                    label = (
-                      <>
-                        <div
-                          style={{
-                            color: "#0e700e",
-                            lineHeight: "15px",
-                            fontSize: "15px",
-                          }}
-                        >
-                          <Badge status="success" text="已完成" />
-                        </div>
-                      </>
-                    );
-                  } else {
-                    label = (
-                      <>
-                        <div
-                          style={{
-                            color: "#ff0000",
-                            lineHeight: "15px",
-                            fontSize: "15px",
-                          }}
-                        >
-                          <Badge status="warning" text="已失效" />
-                        </div>
-                      </>
-                    );
-                  }
-                  return label;
-                },
-              },
-              {
                 title: "测试时间",
                 width: 120,
                 align: "center",
                 render(v, r) {
-                  return <>{r.upload_time}</>;
+                  const date = new Date(r.start_time);
+                  const year = date.getFullYear();
+                  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+                  const day = ("0" + date.getDate()).slice(-2);
+                  const hours = ("0" + date.getHours()).slice(-2);
+                  const minutes = ("0" + date.getMinutes()).slice(-2);
+                  const seconds = ("0" + date.getSeconds()).slice(-2);
+                  return (
+                    <>{`${year}.${month}.${day}/${hours}:${minutes}:${seconds}`}</>
+                  );
                 },
               },
               {
@@ -223,7 +175,17 @@ function TestRecord() {
                 width: 120,
                 align: "center",
                 render(v, r) {
-                  return <>{r.duration}</>;
+                  if (r.end_time == null) return null;
+                  const startTime = new Date(r.start_time).getTime();
+                  const endTime = new Date(r.end_time).getTime();
+                  const durationSeconds = (endTime - startTime) / 1000;
+                  const durationMinutes = Math.floor(durationSeconds / 60);
+                  const durationSecondsRemainder = Math.floor(
+                    durationSeconds % 60
+                  );
+                  return (
+                    <>{`${durationMinutes} 分钟 ${durationSecondsRemainder} 秒`}</>
+                  );
                 },
               },
               {
@@ -239,20 +201,31 @@ function TestRecord() {
                         icon={<BarChartOutlined />}
                         size="small"
                         onClick={() => {
-                          navigate(`/admin/UsageList/${r.p_id}`); // 导航到带有 u_p_id 参数设置为 r.p_id 的 UsageList 页面
-                        }}
-                      />
-                      <Button
-                        type="primary"
-                        style={{ backgroundColor: "#7977ac" }}
-                        icon={<CloudDownloadOutlined />}
-                        size="small"
-                        onClick={() => {
-                          navigate(`/admin/UsageList/${r.p_id}`); // 导航到带有 u_p_id 参数设置为 r.p_id 的 UsageList 页面
+                          setCurrentId(r.id);
+                          setMode(r.mode);
+                          setResultOpen(true);
+                          console.log(currentId);
                         }}
                       />
 
-                      <Popconfirm
+                      {current === "multiple" && (
+                        <Button
+                          type="primary"
+                          style={{ backgroundColor: "#7977ac" }}
+                          icon={<FileZipOutlined />}
+                          size="small"
+                          onClick={() => {
+                            downloadTestApi(r.id).then((res) => {
+                              console.log(res);
+                              const str = JSON.stringify(res, null, 2);
+                              const url = `data:,${str}`;
+                              download(url, "result.json");
+                            });
+                          }}
+                        />
+                      )}
+
+                      {/* <Popconfirm
                         title="是否确认删除此项?"
                         onConfirm={async () => {
                           //   await delProductByIdAPI(r.p_id);
@@ -265,7 +238,7 @@ function TestRecord() {
                           size="small"
                           danger
                         />
-                      </Popconfirm>
+                      </Popconfirm> */}
                     </Space>
                   );
                 },
@@ -283,6 +256,12 @@ function TestRecord() {
           />
         </Space>
       </Card>
+      <TestResultModal
+        isOpen={resultOpen}
+        onCancel={onResultCancel}
+        record_id={currentId}
+        mode={mode}
+      />
     </>
   );
 }

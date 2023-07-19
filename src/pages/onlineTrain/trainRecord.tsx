@@ -4,95 +4,57 @@ import {
   Form,
   Table,
   Space,
-  Popconfirm,
-  Menu,
-  MenuProps,
-  Badge,
+  Tooltip,
 } from "antd";
 import {
-  AppstoreOutlined,
   BarChartOutlined,
-  BlockOutlined,
-  BorderOutlined,
-  BuildOutlined,
   CloudDownloadOutlined,
-  CloudUploadOutlined,
-  DeleteOutlined,
+  DashboardOutlined,
   EditOutlined,
-  EyeOutlined,
-  MailOutlined,
-  RocketOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { loadTrainRecord } from "../../services/record.service";
+import TrainResultModal from "../modal/trainResult.modal";
+import { getModelApi } from "../../services/model.service";
+import { AxiosResponse } from "axios";
 
 function TrainRecord() {
   const navigate = useNavigate();
   const [isShow, setIsShow] = useState(false); // 控制modal显示和隐藏
   const [myForm] = Form.useForm(); // 可以获取表单元素实例
+  const [resultOpen, setResultOpen] = useState(false);
   const [query, setQuery] = useState(1); // 查询条件
-  const [data, setData] = useState<any>([
-    {
-      id: 230713001,
-      state: "isWaiting",
-      remark: "test",
-    },
-  ]);
+  const [data, setData] = useState<any>([]);
   const [total, setTotal] = useState(0); // 总数量
   const [currentId, setCurrentId] = useState(""); // 当前id，如果为空表示新增
-  const [imageUrl, setImageUrl] = useState<string>(""); // 上传之后的数据
-  const [findId, setFindId] = useState("");
-
-  //   useEffect(() => {
-  //     // 调用 loadProductListAPI 函数获取产品列表数据
-  //     loadProductListAPI(query)
-  //       .then((res) => {
-  //         if (query !== 0) {
-  //           setData(res.result.list);
-  //           setTotal(res.result.total); // 设置总数量
-  //           console.log(res);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }, [query]); // 监听query改变
-
-  //   useEffect(() => {
-  //     loadProductByIdAPI(findId)
-  //       .then((res) => {
-  //         if (findId !== "0") {
-  //           let li = {
-  //             p_id: res.result.p_id,
-  //             p_type: res.result.p_type,
-  //             p_state: res.result.p_state,
-  //             p_time: res.result.p_time,
-  //             p_img_url: res.result.p_img_url,
-  //           };
-  //           let arr = [li];
-  //           setData(arr);
-  //           setTotal(1); // 设置总数量
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }, [findId]);
 
   useEffect(() => {
-    if (!isShow) {
-      // 关闭弹窗之后重置数据
-      setCurrentId("");
-      setImageUrl("");
-    }
-  }, [isShow]);
+    // 定时刷新数据
+    const intervalId = setInterval(() => {
+      loadTrainRecord().then((res) => {
+        if (res.code === 0) {
+          setData(res.result);
+          setTotal(res.count);
+        }
+      });
+    }, 5000);
 
-  const [current, setCurrent] = useState("single");
+    // 组件销毁时清除定时器
+    return () => clearInterval(intervalId);
+  }, []);
 
-  const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
-    setCurrent(e.key);
+    useEffect(() => {
+      loadTrainRecord().then((res) => {
+        if (res.code === 0) {
+          setData(res.result);
+          setTotal(res.count);
+        }
+      });
+    }, []);
+
+  const onResultCancel = () => {
+    setResultOpen(false);
   };
 
   return (
@@ -131,7 +93,6 @@ function TrainRecord() {
                         onClick={() => {
                           setIsShow(true);
                           setCurrentId(r.p_id);
-                          setImageUrl(r.p_img_url);
                           myForm.setFieldsValue(r);
                         }}
                       />
@@ -141,63 +102,20 @@ function TrainRecord() {
                 },
               },
               {
-                title: "状态",
-                width: 80,
-                align: "center",
-                render(v, r: any) {
-                  let label;
-                  if (r.state === "isWaiting") {
-                    label = (
-                      <>
-                        <div
-                          style={{
-                            color: "#007acc",
-                            lineHeight: "15px",
-                            fontSize: "15px",
-                          }}
-                        >
-                          <Badge status="processing" text="未完成" />
-                        </div>
-                      </>
-                    );
-                  } else if (r.p_state === "isFinished") {
-                    label = (
-                      <>
-                        <div
-                          style={{
-                            color: "#0e700e",
-                            lineHeight: "15px",
-                            fontSize: "15px",
-                          }}
-                        >
-                          <Badge status="success" text="已完成" />
-                        </div>
-                      </>
-                    );
-                  } else {
-                    label = (
-                      <>
-                        <div
-                          style={{
-                            color: "#ff0000",
-                            lineHeight: "15px",
-                            fontSize: "15px",
-                          }}
-                        >
-                          <Badge status="warning" text="已失效" />
-                        </div>
-                      </>
-                    );
-                  }
-                  return label;
-                },
-              },
-              {
                 title: "训练时间",
                 width: 120,
                 align: "center",
                 render(v, r) {
-                  return <>{r.upload_time}</>;
+                  const date = new Date(r.start_time);
+                  const year = date.getFullYear();
+                  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+                  const day = ("0" + date.getDate()).slice(-2);
+                  const hours = ("0" + date.getHours()).slice(-2);
+                  const minutes = ("0" + date.getMinutes()).slice(-2);
+                  const seconds = ("0" + date.getSeconds()).slice(-2);
+                  return (
+                    <>{`${year}.${month}.${day}/${hours}:${minutes}:${seconds}`}</>
+                  );
                 },
               },
               {
@@ -205,7 +123,17 @@ function TrainRecord() {
                 width: 120,
                 align: "center",
                 render(v, r) {
-                  return <>{r.duration}</>;
+                  if (r.end_time == null) return null;
+                  const startTime = new Date(r.start_time).getTime();
+                  const endTime = new Date(r.end_time).getTime();
+                  const durationSeconds = (endTime - startTime) / 1000;
+                  const durationMinutes = Math.floor(durationSeconds / 60);
+                  const durationSecondsRemainder = Math.floor(
+                    durationSeconds % 60
+                  );
+                  return (
+                    <>{`${durationMinutes} 分钟 ${durationSecondsRemainder} 秒`}</>
+                  );
                 },
               },
               {
@@ -215,29 +143,67 @@ function TrainRecord() {
                 render(v, r: any) {
                   return (
                     <Space>
-                      <Button
-                        type="primary"
-                        style={{ backgroundColor: "#182e67" }}
-                        icon={<BarChartOutlined />}
-                        size="small"
-                        onClick={() => {
-                          navigate(`/admin/UsageList/${r.p_id}`); // 导航到带有 u_p_id 参数设置为 r.p_id 的 UsageList 页面
-                        }}
-                      />
-                      <Button
-                        type="primary"
-                        style={{ backgroundColor: "#182e67" }}
-                        icon={<CloudDownloadOutlined />}
-                        size="small"
-                        onClick={() => {
-                          navigate(`/admin/UsageList/${r.p_id}`); // 导航到带有 u_p_id 参数设置为 r.p_id 的 UsageList 页面
-                        }}
-                      />
+                      <Tooltip title={"查看可视化训练结果"}>
+                        <Button
+                          type="primary"
+                          style={{ backgroundColor: "#182e67" }}
+                          icon={<BarChartOutlined />}
+                          size="small"
+                          disabled={r.isExpired}
+                          onClick={() => {
+                            setCurrentId(r.id);
+                            setResultOpen(true);
+                          }}
+                        />
+                        <TrainResultModal
+                          isOpen={resultOpen}
+                          onCancel={onResultCancel}
+                          record_id={currentId}
+                        />
+                      </Tooltip>
+                      <Tooltip title={"下载训练模型"}>
+                        <Button
+                          type="primary"
+                          style={{ backgroundColor: "#182e67" }}
+                          icon={<CloudDownloadOutlined />}
+                          size="small"
+                          disabled={r.isExpired}
+                          onClick={() => {
+                            getModelApi(r.id).then(
+                              (response: AxiosResponse) => {
+                                const data = new Blob([response.data]);
+                                const reader = new FileReader();
+                                reader.readAsDataURL(data);
+                                reader.onload = () => {
+                                  const url = reader.result as string;
+                                  const link = document.createElement("a");
+                                  link.href = url;
+                                  link.download = "model.joblib";
+                                  document.body.appendChild(link);
+                                  link.click();
+                                  link.remove();
+                                };
+                              }
+                            );
+                          }}
+                        />
+                      </Tooltip>
+                      <Tooltip title={"前往在线测试"}>
+                        <Button
+                          type="primary"
+                          style={{ backgroundColor: "#182e67" }}
+                          icon={<DashboardOutlined />}
+                          size="small"
+                          disabled={r.isExpired}
+                          onClick={() => {
+                            navigate("/test/welcome");
+                          }}
+                        />
+                      </Tooltip>
 
-                      <Popconfirm
+                      {/* <Popconfirm
                         title="是否确认删除此项?"
                         onConfirm={async () => {
-                          //   await delProductByIdAPI(r.p_id);
                           setQuery(1); // 重新加载数据
                         }}
                       >
@@ -247,7 +213,7 @@ function TrainRecord() {
                           size="small"
                           danger
                         />
-                      </Popconfirm>
+                      </Popconfirm> */}
                     </Space>
                   );
                 },

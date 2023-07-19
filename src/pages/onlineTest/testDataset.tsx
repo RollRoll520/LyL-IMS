@@ -1,10 +1,8 @@
 import {
   Card,
   Button,
-  Form,
   Table,
   Space,
-  Popconfirm,
   Menu,
   MenuProps,
   Badge,
@@ -15,91 +13,104 @@ import {
   BorderOutlined,
   CloudUploadOutlined,
   DashboardOutlined,
-  DeleteOutlined,
   EditOutlined,
-  EyeOutlined,
-  FlagOutlined,
-  RocketOutlined,
-  ThunderboltOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TestUploadModal from "../modal/testUpload.modal";
+import {
+  loadMultipleTestSet,
+  loadSingleTestSet,
+} from "../../services/dataset.service";
+import TestModal from "../modal/test.modal";
 
 const items: MenuProps["items"] = [
   {
     label: "单条测试集",
-    key: "single",
+    key: "single_test",
     icon: <BorderOutlined />,
   },
   {
     label: "批量测试集",
-    key: "multiple",
+    key: "mul_test",
     icon: <BlockOutlined />,
   },
 ];
 
 function TestDataset() {
   const navigate = useNavigate();
-  const [isShow, setIsShow] = useState(false); // 控制modal显示和隐藏
-  const [myForm] = Form.useForm(); // 可以获取表单元素实例
   const [query, setQuery] = useState(1); // 查询条件
-  const [data, setData] = useState<any>([
-    {
-      id: 230713001,
-      state: "isWaiting",
-      remark: "test",
-    },
-  ]);
+  const [data, setData] = useState<any>([]);
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [current, setCurrent] = useState("single_test");
+  const [testOpen, setTestOpen] = useState(false);
   const [total, setTotal] = useState(0); // 总数量
   const [currentId, setCurrentId] = useState(""); // 当前id，如果为空表示新增
-  const [imageUrl, setImageUrl] = useState<string>(""); // 上传之后的数据
-  const [findId, setFindId] = useState("");
 
-  //   useEffect(() => {
-  //     // 调用 loadProductListAPI 函数获取产品列表数据
-  //     loadProductListAPI(query)
-  //       .then((res) => {
-  //         if (query !== 0) {
-  //           setData(res.result.list);
-  //           setTotal(res.result.total); // 设置总数量
-  //           console.log(res);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }, [query]); // 监听query改变
+  function refreshDatasetList() {
+    if (current === "single_test") {
+      loadSingleTestSet().then((res) => {
+        if (res.code === 0) {
+          setData(res.result);
+          setTotal(res.count);
+        } else {
+          console.log(res);
+        }
+      });
+    } else {
+      loadMultipleTestSet().then((res) => {
+        if (res.code === 0) {
+          setData(res.result);
+          setTotal(res.count);
+        } else {
+          console.log(res);
+        }
+      });
+    }
+  }
 
-  //   useEffect(() => {
-  //     loadProductByIdAPI(findId)
-  //       .then((res) => {
-  //         if (findId !== "0") {
-  //           let li = {
-  //             p_id: res.result.p_id,
-  //             p_type: res.result.p_type,
-  //             p_state: res.result.p_state,
-  //             p_time: res.result.p_time,
-  //             p_img_url: res.result.p_img_url,
-  //           };
-  //           let arr = [li];
-  //           setData(arr);
-  //           setTotal(1); // 设置总数量
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }, [findId]);
+  const onUploadCancel = () => {
+    refreshDatasetList();
+    setUploadOpen(false);
+  };
+
+  const onTestCancel = () => {
+    refreshDatasetList();
+    setTestOpen(false);
+  };
 
   useEffect(() => {
-    if (!isShow) {
-      // 关闭弹窗之后重置数据
-      setCurrentId("");
-      setImageUrl("");
-    }
-  }, [isShow]);
+    loadSingleTestSet().then((res) => {
+      if (res.code === 0) {
+        setData(res.result);
+        setTotal(res.count);
+      } else {
+        console.log(res);
+      }
+    });
+  }, []);
 
-  const [current, setCurrent] = useState("train");
+  useEffect(() => {
+    if (current === "mul_test") {
+      loadMultipleTestSet().then((res) => {
+        if (res.code === 0) {
+          setData(res.result);
+          setTotal(res.count);
+        } else {
+          console.log(res);
+        }
+      });
+    } else {
+      loadSingleTestSet().then((res) => {
+        if (res.code === 0) {
+          setData(res.result);
+          setTotal(res.count);
+        } else {
+          console.log(res);
+        }
+      });
+    }
+  }, [current]);
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
@@ -121,12 +132,19 @@ function TestDataset() {
           type="primary"
           icon={<CloudUploadOutlined />}
           onClick={() => {
-            navigate(-1); // 返回上一页
+            setUploadOpen(true);
           }}
         >
           上传测试集
         </Button>
       </div>
+      <TestUploadModal isOpen={uploadOpen} onCancel={onUploadCancel} />
+      <TestModal
+        isOpen={testOpen}
+        onCancel={onTestCancel}
+        id={currentId}
+        mode={current}
+      ></TestModal>
       <Menu
         onClick={onClick}
         selectedKeys={[current]}
@@ -164,12 +182,7 @@ function TestDataset() {
                           color: "#c8c5f7",
                           borderColor: "#c8c5f7",
                         }}
-                        onClick={() => {
-                          setIsShow(true);
-                          setCurrentId(r.p_id);
-                          setImageUrl(r.p_img_url);
-                          myForm.setFieldsValue(r);
-                        }}
+                        onClick={() => {}}
                       />
                       {r.remark}
                     </>
@@ -177,7 +190,7 @@ function TestDataset() {
                 },
               },
               {
-                title: "状态",
+                title: "测试进度",
                 width: 80,
                 align: "center",
                 render(v, r: any) {
@@ -196,7 +209,7 @@ function TestDataset() {
                         </div>
                       </>
                     );
-                  } else if (r.p_state === "isFinished") {
+                  } else if (r.state === "isFinished") {
                     label = (
                       <>
                         <div
@@ -233,7 +246,16 @@ function TestDataset() {
                 width: 120,
                 align: "center",
                 render(v, r) {
-                  return <>{r.upload_time}</>;
+                  const date = new Date(r.upload_time);
+                  const year = date.getFullYear();
+                  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+                  const day = ("0" + date.getDate()).slice(-2);
+                  const hours = ("0" + date.getHours()).slice(-2);
+                  const minutes = ("0" + date.getMinutes()).slice(-2);
+                  const seconds = ("0" + date.getSeconds()).slice(-2);
+                  return (
+                    <>{`${year}.${month}.${day}/${hours}:${minutes}:${seconds}`}</>
+                  );
                 },
               },
               {
@@ -243,18 +265,19 @@ function TestDataset() {
                 render(v, r: any) {
                   return (
                     <Space>
-                      <Tooltip placement="bottom" title="测试该数据集">
+                      <Tooltip placement="top" title="测试该数据集">
                         <Button
                           type="primary"
                           style={{ backgroundColor: "#c8c5f7" }}
                           icon={<DashboardOutlined />}
                           size="small"
                           onClick={() => {
-                            navigate(`/admin/UsageList/${r.p_id}`); // 导航到带有 u_p_id 参数设置为 r.p_id 的 UsageList 页面
+                            setCurrentId(r.id);
+                            setTestOpen(true);
                           }}
                         />
                       </Tooltip>
-                      <Button
+                      {/* <Button
                         type="primary"
                         style={{ backgroundColor: "#c8c5f7" }}
                         icon={<EyeOutlined />}
@@ -277,7 +300,7 @@ function TestDataset() {
                           size="small"
                           danger
                         />
-                      </Popconfirm>
+                      </Popconfirm> */}
                     </Space>
                   );
                 },

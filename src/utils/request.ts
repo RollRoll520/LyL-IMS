@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from "axios";
 // @ts-ignore
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
-import { getToken, serverUrl } from './tools';
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+import { getToken, serverUrl } from "./tools";
 
 const instance = axios.create({
   baseURL: serverUrl, // 请求的基础地址
@@ -49,12 +49,9 @@ instance.interceptors.response.use(
  */
 export const get = (url: string) =>
   instance
-    .get(
-      url,
-      {
-        headers: { token: getToken() },
-      }
-    )
+    .get(url, {
+      headers: { token: getToken() },
+    })
     .then((res) => res.data);
 
 /**
@@ -64,16 +61,23 @@ export const get = (url: string) =>
  * @returns
  */
 export const post = (url: string, data: any = {}) =>
-  instance.post(url, data).then((res) => res.data);
-
+  instance
+    .post(
+      url,
+      // {
+      //   headers: { token: getToken() },
+      // },
+      data
+    )
+    .then((res) => res.data);
 /**
  * post请求
  * @param url   地址
  * @param data  参数
  * @returns
  */
-export const mulPost = (url: string, params:any,data: any = {}) =>
-  instance.post(url, params,data).then((res) => res.data);
+export const mulPost = (url: string, params: any, data: any = {}) =>
+  instance.post(url, params, data).then((res) => res.data);
 
 /**
  * put请求
@@ -100,5 +104,3 @@ export const patch = (url: string, data: any = {}) =>
  */
 export const del = (url: string) =>
   instance.delete(url).then((res) => res.data);
-
-
