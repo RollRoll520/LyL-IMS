@@ -56,7 +56,7 @@ export const logout = async() => {
  */
 export const getToken = () => sessionStorage.getItem("token");
 
-export const getUser = () => {
+export const getUser = async () => {
   const user = {
     id: sessionStorage.getItem("id"),
     username: sessionStorage.getItem("username"),

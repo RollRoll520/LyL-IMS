@@ -1,11 +1,4 @@
-import {
-  Card,
-  Button,
-  Form,
-  Table,
-  Space,
-  Tooltip,
-} from "antd";
+import { Card, Button, Form, Table, Space, Tooltip, message } from "antd";
 import {
   BarChartOutlined,
   CloudDownloadOutlined,
@@ -18,6 +11,7 @@ import { loadTrainRecord } from "../../services/record.service";
 import TrainResultModal from "../modal/trainResult.modal";
 import { getModelApi } from "../../services/model.service";
 import { AxiosResponse } from "axios";
+import { getUser } from "../../utils/tools";
 
 function TrainRecord() {
   const navigate = useNavigate();
@@ -44,14 +38,14 @@ function TrainRecord() {
     return () => clearInterval(intervalId);
   }, []);
 
-    useEffect(() => {
-      loadTrainRecord().then((res) => {
-        if (res.code === 0) {
-          setData(res.result);
-          setTotal(res.count);
-        }
-      });
-    }, []);
+  useEffect(() => {
+    loadTrainRecord().then((res) => {
+      if (res.code === 0) {
+        setData(res.result);
+        setTotal(res.count);
+      }
+    });
+  }, []);
 
   const onResultCancel = () => {
     setResultOpen(false);
@@ -80,7 +74,7 @@ function TrainRecord() {
                 render(v, r: any) {
                   return (
                     <>
-                      <Button
+                      {/* <Button
                         type="primary"
                         icon={<EditOutlined />}
                         size="small"
@@ -95,7 +89,7 @@ function TrainRecord() {
                           setCurrentId(r.p_id);
                           myForm.setFieldsValue(r);
                         }}
-                      />
+                      /> */}
                       {r.remark}
                     </>
                   );
@@ -151,8 +145,14 @@ function TrainRecord() {
                           size="small"
                           disabled={r.isExpired}
                           onClick={() => {
-                            setCurrentId(r.id);
-                            setResultOpen(true);
+                            if (r.end_time === null)
+                              message.warning(
+                                "请耐心等待训练用时显示后查看结果！"
+                              );
+                            else {
+                              setCurrentId(r.id);
+                              setResultOpen(true);
+                            }
                           }}
                         />
                         <TrainResultModal
@@ -168,23 +168,46 @@ function TrainRecord() {
                           icon={<CloudDownloadOutlined />}
                           size="small"
                           disabled={r.isExpired}
-                          onClick={() => {
-                            getModelApi(r.id).then(
-                              (response: AxiosResponse) => {
-                                const data = new Blob([response.data]);
-                                const reader = new FileReader();
-                                reader.readAsDataURL(data);
-                                reader.onload = () => {
-                                  const url = reader.result as string;
-                                  const link = document.createElement("a");
-                                  link.href = url;
-                                  link.download = "model.joblib";
-                                  document.body.appendChild(link);
-                                  link.click();
-                                  link.remove();
-                                };
-                              }
-                            );
+                          onClick={async () => {
+                            if (r.end_time === null)
+                              message.warning(
+                                "请耐心等待训练用时显示后下载训练模型！"
+                              );
+                            else {
+                              const user = await getUser();
+                              getModelApi(r.id).then((res) => {
+                                const file = res.result.file;
+                                const link = document.createElement("a");
+                                link.href =
+                                  "https://roll0814.cn/application/lyl/backend/result/model/" +
+                                  `${user.id}` +
+                                  "/" +
+                                  file;
+                                console.log(link.href);
+                                link.download = "model.joblib";
+                                document.body.appendChild(link);
+                                link.click();
+                                link.remove();
+                              });
+                              // getModelApi(r.id).then(
+                              //   (response: AxiosResponse) => {
+                              //     const data = new Blob([response.data], {
+                              //       type: "application/octet-stream",
+                              //     });
+                              //     const reader = new FileReader();
+                              //     reader.readAsArrayBuffer(data);
+                              //     reader.onload = () => {
+                              //       const url = URL.createObjectURL(data);
+                              //       const link = document.createElement("a");
+                              //       link.href = url;
+                              //       link.download = "model.joblib";
+                              //       document.body.appendChild(link);
+                              //       link.click();
+                              //       link.remove();
+                              //     };
+                              //   }
+                              // );
+                            }
                           }}
                         />
                       </Tooltip>

@@ -88,7 +88,7 @@ const TrainModal: React.FC<TrainModalProps> = ({
 
     if (res.code === 0) {
       navigate("/train/record");
-      message.success("已开始训练，请稍后查看结果");
+      message.success("已开始训练，请在显示训练用时后查看结果");
       onCancel();
     } else {
       message.error(res.message || "训练失败，请稍后重试");
@@ -117,7 +117,15 @@ const TrainModal: React.FC<TrainModalProps> = ({
             onFinish={onValidateFormFinish}
             form={validateForm}
           >
-            <Badge.Ribbon color="#182e67" text={<>训练集已选择{id}</>}>
+            <Badge.Ribbon
+              color="#182e67"
+              text={
+                <>
+                  {id === 230000001 && <>已选择默认训练集</>}
+                  {id !== 230000001 && <>训练集已选择{id}</>}
+                </>
+              }
+            >
               <Form.Item
                 label="验证集"
                 name="validate_id"
@@ -146,14 +154,47 @@ const TrainModal: React.FC<TrainModalProps> = ({
                           title={"备注"}
                           content={item.remark}
                         >
-                          {item.state === "isWaiting" && (
-                            <Badge status="processing" text={item.id} />
+                          {item.u_id === 0 && (
+                            <Badge status="default" text={item.remark} />
                           )}
-                          {item.state === "isFinished" && (
-                            <Badge status="success" text={item.id} />
+                          {item.u_id !== 0 && item.state === "isWaiting" && (
+                            <Badge
+                              status="processing"
+                              text={
+                                <span style={{ color: "#7977ab" }}>
+                                  {item.id}
+                                  <span style={{ color: "#c8c5f7" }}>
+                                    (上传于{item.upload_time})
+                                  </span>
+                                </span>
+                              }
+                            />
                           )}
-                          {item.state === "isExpired" && (
-                            <Badge status="warning" text={item.id} />
+                          {item.u_id !== 0 && item.state === "isFinished" && (
+                            <Badge
+                              status="success"
+                              text={
+                                <span style={{ color: "#182e67" }}>
+                                  {item.id}
+                                  <span style={{ color: "#182e67" }}>
+                                    (上传于{item.upload_time})
+                                  </span>
+                                </span>
+                              }
+                            />
+                          )}
+                          {item.u_id !== 0 && item.state === "isExpired" && (
+                            <Badge
+                              status="warning"
+                              text={
+                                <span style={{ color: "#182e67" }}>
+                                  {item.id}
+                                  <span style={{ color: "#182e67" }}>
+                                    (上传于{item.upload_time})
+                                  </span>
+                                </span>
+                              }
+                            />
                           )}
                         </Popover>
                       </>
@@ -194,7 +235,15 @@ const TrainModal: React.FC<TrainModalProps> = ({
             onFinish={onTrainFormFinish}
             form={trainForm}
           >
-            <Badge.Ribbon color="#182e67" text={<>验证集已选择{id}</>}>
+            <Badge.Ribbon
+              color="#182e67"
+              text={
+                <>
+                  {id === 230000002 && <>已选择默认验证集</>}
+                  {id !== 230000002 && <>验证集已选择{id}</>}
+                </>
+              }
+            >
               <Form.Item
                 label="训练集"
                 name="train_id"
@@ -223,14 +272,47 @@ const TrainModal: React.FC<TrainModalProps> = ({
                           title={"备注"}
                           content={item.remark}
                         >
-                          {item.state === "isWaiting" && (
-                            <Badge status="processing" text={item.id} />
+                          {item.u_id === 0 && (
+                            <Badge status="default" text={item.remark} />
                           )}
-                          {item.state === "isFinished" && (
-                            <Badge status="success" text={item.id} />
+                          {item.u_id !== 0 && item.state === "isWaiting" && (
+                            <Badge
+                              status="processing"
+                              text={
+                                <span style={{ color: "#182e67" }}>
+                                  {item.id}
+                                  <span style={{ color: "#182e67" }}>
+                                    (上传于{item.upload_time})
+                                  </span>
+                                </span>
+                              }
+                            />
                           )}
-                          {item.state === "isExpired" && (
-                            <Badge status="warning" text={item.id} />
+                          {item.u_id !== 0 && item.state === "isFinished" && (
+                            <Badge
+                              status="success"
+                              text={
+                                <span style={{ color: "#182e67" }}>
+                                  {item.id}
+                                  <span style={{ color: "#182e67" }}>
+                                    (上传于{item.upload_time})
+                                  </span>
+                                </span>
+                              }
+                            />
+                          )}
+                          {item.u_id !== 0 && item.state === "isExpired" && (
+                            <Badge
+                              status="warning"
+                              text={
+                                <span style={{ color: "#182e67" }}>
+                                  {item.id}
+                                  <span style={{ color: "#182e67" }}>
+                                    (上传于{item.upload_time})
+                                  </span>
+                                </span>
+                              }
+                            />
                           )}
                         </Popover>
                       </>

@@ -1,8 +1,7 @@
 import { InboxOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Radio, UploadProps, message } from "antd";
+import { Form, Modal, Radio, UploadProps, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import Dragger from "antd/es/upload/Dragger";
-import { uploadDatasetApi } from "../../services/dataset.service";
 import { getToken, serverUrl } from "../../utils/tools";
 import { useState } from "react";
 
@@ -13,6 +12,7 @@ interface UploadModalProps {
 
 const TrainUploadModal: React.FC<UploadModalProps> = ({ isOpen, onCancel }) => {
   const [typeValue, setTypeValue] = useState<string | undefined>(undefined); // 使用useState保存type字段的值
+  const [remarkValue, setRemarkValue] = useState<string | undefined>(undefined);
 
   const onFinish = async (values: any) => {
     console.log("Success:" + values);
@@ -25,20 +25,27 @@ const TrainUploadModal: React.FC<UploadModalProps> = ({ isOpen, onCancel }) => {
     formData.append("type", form.getFieldValue("type"));
     formData.append("remark", form.getFieldValue("remark"));
 
-    const token = getToken();    
-    xhr.open("POST", serverUrl+"dataset/new", true);
-    xhr.setRequestHeader("token",token!);
+    const token = getToken();
+    xhr.open("POST", serverUrl + "dataset/new", true);
+    xhr.setRequestHeader("token", token!);
 
     xhr.upload.onprogress = function (e) {
       const percent = Math.round((e.loaded / e.total) * 100);
-      message.loading(`上传进度：${percent}%`);
-      if(percent===100) message.warning("请耐心等待服务器接收数据！");
+      if (percent === 100) {
+                message.warning({
+                  content:
+                    "请勿关闭此弹窗，数据集过大时请耐心等待服务器接收数据！",
+                  duration: 4,
+                });
+      }
     };
-    
 
     xhr.onload = function () {
       if (xhr.status === 200) {
         message.success("上传成功");
+        form.resetFields(); // 重置表单
+        setTypeValue(undefined); // 重置type字段的值
+        setRemarkValue(undefined); // 重置type字段的值
         onCancel();
       } else {
         message.error("上传失败");
@@ -59,12 +66,17 @@ const TrainUploadModal: React.FC<UploadModalProps> = ({ isOpen, onCancel }) => {
     setTypeValue(e.target.value);
   };
 
+  const handleRemarkChange = (e: any) => {
+    setRemarkValue(e.target.value);
+  };
+
   // 根据 type 字段的值来动态更新上传组件的 disabled 状态
   const props: UploadProps = {
     name: "dataset",
     multiple: false,
     customRequest: ({ file }) => handleUpload(file),
-    disabled: !typeValue,
+    showUploadList: false,
+    disabled: !typeValue || !remarkValue,
     onChange(info) {
       const { status } = info.file;
       if (status !== "uploading") {
@@ -87,7 +99,12 @@ const TrainUploadModal: React.FC<UploadModalProps> = ({ isOpen, onCancel }) => {
       centered={true}
       open={isOpen}
       maskClosable={false}
-      onCancel={onCancel}
+      onCancel={() => {
+        form.resetFields(); // 重置表单
+        setTypeValue(undefined); // 重置type字段的值
+        setRemarkValue(undefined); // 重置type字段的值
+        onCancel();
+      }}
       footer={null}
     >
       <Form
@@ -107,7 +124,7 @@ const TrainUploadModal: React.FC<UploadModalProps> = ({ isOpen, onCancel }) => {
           </Radio.Group>
         </Form.Item>
         <Form.Item label="数据集备注" name="remark">
-          <TextArea rows={2} required={true} />
+          <TextArea rows={2} onChange={handleRemarkChange} />
         </Form.Item>
         <Form.Item>
           <Dragger {...props}>
@@ -115,6 +132,9 @@ const TrainUploadModal: React.FC<UploadModalProps> = ({ isOpen, onCancel }) => {
               <InboxOutlined />
             </p>
             <p className="ant-upload-text">点击或拖拽进行上传</p>
+            <p className="ant-upload-hint">
+              选择数据集类型并添加备注后方可上传！
+            </p>
             <p className="ant-upload-hint">
               请确保你的数据集类型选择正确！否则将影响操作结果！
             </p>

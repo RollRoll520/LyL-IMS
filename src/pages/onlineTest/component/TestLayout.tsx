@@ -5,7 +5,7 @@ import {
   GithubOutlined,
   HomeOutlined,
 } from "@ant-design/icons";
-import { Button, Dropdown, Layout, Menu,  Tooltip } from "antd";
+import { Button, Dropdown, Layout, Menu, Tooltip } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import MyIcon from "../../../components/iconfont";
@@ -39,6 +39,7 @@ const TestLayout = (props: any) => {
 
   const onOk = async () => {
     setUser(await getUser());
+    window.location.reload(); // 刷新当前页面
   };
 
   const onRegisterCancel = () => {
@@ -59,16 +60,16 @@ const TestLayout = (props: any) => {
   const onLogout = async () => {
     await logout();
     setUser(undefined);
-    navigate("/test/welcome");
+    navigate("/test/welcome", { replace: true }); // 跳转页面
   };
 
-    const handleMenuSelect = ({ key }: any) => {
-      if (!user && key !== "") {
-        setLoginOpen(true);
-      } else {
-        navigate(`/test/${key}`);
-      }
-    };
+  const handleMenuSelect = ({ key }: any) => {
+    if (!user && key !== "") {
+      setLoginOpen(true);
+    } else {
+      navigate(`/test/${key}`);
+    }
+  };
 
   useEffect(() => {
     async function updateUser() {

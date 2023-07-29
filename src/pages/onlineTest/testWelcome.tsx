@@ -9,7 +9,6 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import userEvent from "@testing-library/user-event";
 import { loadMultipleTestSet, loadSingleTestSet } from "../../services/dataset.service";
 import { loadMultipleTestRecord, loadSingleTestRecord } from "../../services/record.service";
 

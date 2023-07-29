@@ -1,4 +1,13 @@
-import { Card, Button, Form, Table, Space, Menu, MenuProps } from "antd";
+import {
+  Card,
+  Button,
+  Form,
+  Table,
+  Space,
+  Menu,
+  MenuProps,
+  Tooltip,
+} from "antd";
 import {
   BarChartOutlined,
   BlockOutlined,
@@ -136,7 +145,7 @@ function TestRecord() {
                 render(v, r: any) {
                   return (
                     <>
-                      <Button
+                      {/* <Button
                         type="primary"
                         icon={<EditOutlined />}
                         size="small"
@@ -147,7 +156,7 @@ function TestRecord() {
                           borderColor: "#7977ac",
                         }}
                         onClick={() => {}}
-                      />
+                      /> */}
                       {r.remark}
                     </>
                   );
@@ -195,20 +204,23 @@ function TestRecord() {
                 render(v, r: any) {
                   return (
                     <Space>
-                      <Button
-                        type="primary"
-                        style={{ backgroundColor: "#7977ac" }}
-                        icon={<BarChartOutlined />}
-                        size="small"
-                        onClick={() => {
-                          setCurrentId(r.id);
-                          setMode(r.mode);
-                          setResultOpen(true);
-                          console.log(currentId);
-                        }}
-                      />
+                      <Tooltip title={"查看测试结果"}>
+                        <Button
+                          type="primary"
+                          style={{ backgroundColor: "#7977ac" }}
+                          icon={<BarChartOutlined />}
+                          size="small"
+                          onClick={() => {
+                            setCurrentId(r.id);
+                            setMode(r.mode);
+                            setResultOpen(true);
+                            console.log(currentId);
+                          }}
+                        />
+                      </Tooltip>
 
                       {current === "multiple" && (
+                      <Tooltip title={"下载测试结果"}>
                         <Button
                           type="primary"
                           style={{ backgroundColor: "#7977ac" }}
@@ -223,6 +235,7 @@ function TestRecord() {
                             });
                           }}
                         />
+                        </Tooltip>
                       )}
 
                       {/* <Popconfirm

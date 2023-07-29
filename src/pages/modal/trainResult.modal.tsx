@@ -25,7 +25,7 @@ const items: MenuProps["items"] = [
     icon: <ThunderboltOutlined />,
   },
   {
-    label: "训练集热力图",
+    label: "训练集混淆矩阵",
     key: "train_heat",
     icon: <FlagOutlined />,
   },
@@ -35,7 +35,7 @@ const items: MenuProps["items"] = [
     icon: <BulbOutlined />,
   },
   {
-    label: "验证集热力图",
+    label: "验证集混淆矩阵",
     key: "validate_heat",
     icon: <StockOutlined />,
   },
@@ -129,6 +129,8 @@ const TrainResultModal: React.FC<TrainResultModalProps> = ({
         destroyOnClose={true}
         onCancel={() => {
           onCancel();
+          setTrainReportData([]);
+          setValidateReportData([]);
         }}
         maskClosable={false}
       >

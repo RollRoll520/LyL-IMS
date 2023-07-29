@@ -202,7 +202,7 @@ const TrainWelcome = () => {
             <Card
               title={
                 <div style={{ color: "white" }}>
-                  <HistoryOutlined />
+                  <DatabaseOutlined />
                   数据集
                 </div>
               }
@@ -243,7 +243,7 @@ const TrainWelcome = () => {
             <Card
               title={
                 <div style={{ color: "#182e67" }}>
-                  <DatabaseOutlined />
+                  <HistoryOutlined />
                   训练记录
                 </div>
               }

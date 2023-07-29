@@ -146,8 +146,9 @@ const Banner = () => {
                   <span
                     onClick={async () => {
                       await logout();
-                      const res = await getUser();
-                      setUser(res);
+                      getUser().then((res)=>{
+                        setUser(res);
+                      });
                     }}
                     style={{ color: "#9a91fb" }}
                   >

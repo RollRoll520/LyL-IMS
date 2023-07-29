@@ -38,7 +38,7 @@ const TrainLayout = (props: any) => {
   };
   const onOk = async () => {
     setUser(await getUser());
-    navigate("/train/welcome");
+    window.location.reload(); // 刷新当前页面
   };
 
   const onRegisterCancel = () => {
@@ -58,7 +58,15 @@ const TrainLayout = (props: any) => {
   const onLogout = async () => {
     await logout();
     setUser(undefined);
-    navigate("/train/welcome");
+    navigate("/train/welcome", { replace: true });
+  };
+
+  const handleMenuSelect = ({ key }: any) => {
+    if (!user && key !== "") {
+      setLoginOpen(true);
+    } else {
+      navigate(`/train/${key}`);
+    }
   };
 
   useEffect(() => {
@@ -305,6 +313,7 @@ const TrainLayout = (props: any) => {
             theme="light"
             mode="inline"
             selectedKeys={selectedKey}
+            onSelect={handleMenuSelect}
             defaultSelectedKeys={["welcome"]}
             style={{ backgroundColor: "white" }}
           >

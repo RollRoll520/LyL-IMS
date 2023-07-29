@@ -89,6 +89,7 @@ const TestResultModal: React.FC<TrainResultModalProps> = ({
           destroyOnClose={true}
           onCancel={() => {
             onCancel();
+            setSingleData("");
           }}
           maskClosable={false}
         >
@@ -113,6 +114,8 @@ const TestResultModal: React.FC<TrainResultModalProps> = ({
           destroyOnClose={true}
           onCancel={() => {
             onCancel();
+            setData([]);
+            setTypeValue("bar");
           }}
           maskClosable={false}
         >

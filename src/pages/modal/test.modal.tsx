@@ -47,7 +47,7 @@ const TestModal: React.FC<TestModalProps> = ({ isOpen, onCancel, id ,mode}) => {
 
     if (res.code === 0) {
       navigate("/test/record");
-      message.success("测试成功！，点击操作查看结果");
+      message.success("测试成功！点击操作查看结果");
       onCancel();
     } else {
       message.error(res.message || "训练失败，请稍后重试");
@@ -58,7 +58,7 @@ const TestModal: React.FC<TestModalProps> = ({ isOpen, onCancel, id ,mode}) => {
   return (
     <>
       <Modal
-        title="选择验证集"
+        title="选择模型"
         centered={true}
         open={isOpen}
         onCancel={() => {
@@ -75,7 +75,17 @@ const TestModal: React.FC<TestModalProps> = ({ isOpen, onCancel, id ,mode}) => {
           onFinish={onTestFormFinish}
           form={testForm}
         >
-          <Badge.Ribbon color="#7977ac" text={<>测试集已选择{id}</>}>
+          <Badge.Ribbon
+            color="#7977ac"
+            text={
+              <>
+                {(id === 230000003 || id === 230000004) && (
+                  <>已选择默认测试集</>
+                )}
+                {id !== 230000003 && id !== 230000004 && <>测试集已选择{id}</>}
+              </>
+            }
+          >
             <Form.Item
               label="模型"
               name="train_record_id"
@@ -108,7 +118,7 @@ const TestModal: React.FC<TestModalProps> = ({ isOpen, onCancel, id ,mode}) => {
                           <Badge
                             status="processing"
                             text={
-                              <span style={{color:"#7977ab"}}>
+                              <span style={{ color: "#7977ab" }}>
                                 {item.id}
                                 <span style={{ color: "#c8c5f7" }}>
                                   (训练于{item.start_time})
@@ -133,7 +143,10 @@ const TestModal: React.FC<TestModalProps> = ({ isOpen, onCancel, id ,mode}) => {
                 },
               ]}
             >
-              <Input type="text" placeholder="请输入此次测试备注" />
+              <Input
+                type="text"
+                placeholder="请输入此次测试备注(建议包含模型的备注信息或编号)"
+              />
             </Form.Item>
           </Badge.Ribbon>
         </Form>

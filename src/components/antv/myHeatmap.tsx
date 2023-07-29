@@ -31,6 +31,7 @@ const MyHeatmap = ({ params }: MyHeatmapProps) => {
           colorField: "value",
           sizeField: "value",
           tooltip: {
+            title:"tips",
             formatter: (datum: Datum) => {
               return { name: "计数", value: datum.value };
             },
@@ -39,9 +40,9 @@ const MyHeatmap = ({ params }: MyHeatmapProps) => {
           color: ["#dddddd", "#9ec8e0", "#5fa4cd", "#2e7ab6", "#114d90"],
           label: {
             style: {
-              fill: "#fff",
+              fill: "#000",
               shadowBlur: 2,
-              shadowColor: "rgba(0, 0, 0, 1)",
+              shadowColor: "rgba(255, 255, 255, 0)",
             },
             labelLine: false,
           },

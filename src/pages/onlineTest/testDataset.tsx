@@ -15,6 +15,7 @@ import {
   DashboardOutlined,
   EditOutlined,
 } from "@ant-design/icons";
+import "./css/testDataset.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TestUploadModal from "../modal/testUpload.modal";
@@ -155,6 +156,9 @@ function TestDataset() {
         <Space direction="vertical" style={{ width: "100%", padding: "0px" }}>
           <Table
             dataSource={data}
+            rowClassName={(r: any) => {
+              return r.u_id === 0 ? "gray-row" : "";
+            }}
             rowKey="id"
             columns={[
               {
@@ -162,7 +166,16 @@ function TestDataset() {
                 width: 80,
                 align: "center",
                 render(v, r: any) {
-                  return <>{r.id}</>;
+                  if (r.u_id === 0) {
+                    if (current === "mul_test")
+                      return (
+                        <div style={{ color: "#bbbbbb" }}>默认批量测试集</div>
+                      );
+                    else
+                      return (
+                        <div style={{ color: "#bbbbbb" }}>默认单条测试集</div>
+                      );
+                  } else return <>{r.id}</>;
                 },
               },
               {
@@ -170,9 +183,12 @@ function TestDataset() {
                 width: 120,
                 align: "center",
                 render(v, r: any) {
-                  return (
-                    <>
-                      <Button
+                  if (r.u_id === 0)
+                    return <div style={{ color: "#bbbbbb" }}>来自赛题官网</div>;
+                  else
+                    return (
+                      <>
+                        {/* <Button
                         type="primary"
                         icon={<EditOutlined />}
                         size="small"
@@ -183,10 +199,10 @@ function TestDataset() {
                           borderColor: "#c8c5f7",
                         }}
                         onClick={() => {}}
-                      />
-                      {r.remark}
-                    </>
-                  );
+                      /> */}
+                        {r.remark}
+                      </>
+                    );
                 },
               },
               {
@@ -195,7 +211,21 @@ function TestDataset() {
                 align: "center",
                 render(v, r: any) {
                   let label;
-                  if (r.state === "isWaiting") {
+                  if (r.u_id === 0) {
+                    label = (
+                      <>
+                        <div
+                          style={{
+                            color: "#bbbbbb",
+                            lineHeight: "15px",
+                            fontSize: "15px",
+                          }}
+                        >
+                          <Badge status="default" />
+                        </div>
+                      </>
+                    );
+                  } else if (r.state === "isWaiting") {
                     label = (
                       <>
                         <div
@@ -246,6 +276,8 @@ function TestDataset() {
                 width: 120,
                 align: "center",
                 render(v, r) {
+                  if (r.u_id === 0)
+                    return <div style={{ color: "#bbbbbb" }}>系统默认</div>;
                   const date = new Date(r.upload_time);
                   const year = date.getFullYear();
                   const month = ("0" + (date.getMonth() + 1)).slice(-2);

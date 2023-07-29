@@ -3,21 +3,19 @@ import {
   Button,
   Table,
   Space,
-  Popconfirm,
   Menu,
   MenuProps,
   Badge,
+  Tooltip,
 } from "antd";
 import {
   CloudUploadOutlined,
-  DeleteOutlined,
-  EditOutlined,
   FlagOutlined,
   RocketOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
+import "./css/trainDataset.css";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { loadTrainSet, loadValidateSet } from "../../services/dataset.service";
 import TrainModal from "../modal/train.modal";
 import TrainUploadModal from "../modal/trainUpload.modal";
@@ -36,8 +34,6 @@ const items: MenuProps["items"] = [
 ];
 
 function TrainDataset() {
-  const navigate = useNavigate();
-
   const [trainOpen, setTrainOpen] = useState(false);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [query, setQuery] = useState(1); // 查询条件
@@ -154,6 +150,9 @@ function TrainDataset() {
         <Space direction="vertical" style={{ width: "100%", padding: "0px" }}>
           <Table
             dataSource={data}
+            rowClassName={(r: any) => {
+              return r.u_id === 0 ? "gray-row" : "";
+            }}
             rowKey="id"
             columns={[
               {
@@ -161,7 +160,11 @@ function TrainDataset() {
                 width: 80,
                 align: "center",
                 render(v, r: any) {
-                  return <>{r.id}</>;
+                  if (r.u_id === 0) {
+                    if(current==="validate")
+                    return <div style={{ color: "#bbbbbb" }}>默认验证集</div>;
+                    else return <div style={{ color: "#bbbbbb" }}>默认训练集</div>;
+                  } else return <>{r.id}</>;
                 },
               },
               {
@@ -169,9 +172,11 @@ function TrainDataset() {
                 width: 120,
                 align: "center",
                 render(v, r: any) {
-                  return (
-                    <>
-                      <Button
+                  if (r.u_id === 0) return <div style={{ color: "#bbbbbb" }}>来自赛题官网</div>;
+                  else
+                    return (
+                      <>
+                        {/* <Button
                         type="primary"
                         icon={<EditOutlined />}
                         size="small"
@@ -182,10 +187,10 @@ function TrainDataset() {
                           borderColor: "#182e67",
                         }}
                         onClick={() => {}}
-                      />
-                      {r.remark}
-                    </>
-                  );
+                      /> */}
+                        {r.remark}
+                      </>
+                    );
                 },
               },
               {
@@ -194,7 +199,21 @@ function TrainDataset() {
                 align: "center",
                 render(v, r: any) {
                   let label;
-                  if (r.state === "isWaiting") {
+                  if (r.u_id === 0) {
+                    label = (
+                      <>
+                        <div
+                          style={{
+                            color: "#bbbbbb",
+                            lineHeight: "15px",
+                            fontSize: "15px",
+                          }}
+                        >
+                          <Badge status="default" />
+                        </div>
+                      </>
+                    );
+                  } else if (r.state === "isWaiting") {
                     label = (
                       <>
                         <div
@@ -245,6 +264,7 @@ function TrainDataset() {
                 width: 120,
                 align: "center",
                 render(v, r) {
+                  if (r.u_id === 0) return <div style={{ color: "#bbbbbb" }}>系统默认</div>;
                   const date = new Date(r.upload_time);
                   const year = date.getFullYear();
                   const month = ("0" + (date.getMonth() + 1)).slice(-2);
@@ -264,16 +284,18 @@ function TrainDataset() {
                 render(v, r: any) {
                   return (
                     <Space>
-                      <Button
-                        type="primary"
-                        style={{ backgroundColor: "#182e67" }}
-                        icon={<RocketOutlined />}
-                        size="small"
-                        onClick={() => {
-                          setCurrentId(r.id);
-                          setTrainOpen(true);
-                        }}
-                      />
+                      <Tooltip title={"选择该数据集参与训练"}>
+                        <Button
+                          type="primary"
+                          style={{ backgroundColor: "#182e67" }}
+                          icon={<RocketOutlined />}
+                          size="small"
+                          onClick={() => {
+                            setCurrentId(r.id);
+                            setTrainOpen(true);
+                          }}
+                        />
+                      </Tooltip>
                       {/* //todo:添加 */}
                       {/* <Button
                         type="primary"
